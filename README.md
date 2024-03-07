@@ -60,6 +60,7 @@ The module is quite configurable. The only required options are `host`, `apiKey`
 
 These are the possible options:
 
+<!-- prettier-ignore-start -->
 | Option                          | Description    |
 |---------------------------------|----------------|
 | `host`                          | <p>The URL to your Mealie instance.</p><p>**REQUIRED**<br>**Type:** `string`<br>**Example:** `"https://mealie.yourdomain.com"`<br>**Default value:** none</p>|
@@ -80,6 +81,7 @@ These are the possible options:
 | `animationSpeed`                | <p>Speed of the update animation.</p><p>**Type:** `integer`<br>**Possible values:** `0` - `5000`<br>**Default value:** `500`<br>**Unit:** `milliseconds`</p>|
 | `displayLastUpdate`             | <p>Display the last update time at the end of the meal plan list. See screenshot above</p><p>**Type:** `boolean`<br>**Default value:** `true`<br>**Possible values:** `true` and `false`</p>|
 | `displayLastUpdateFormat`       | <p>Format to use for the time display if `displayLastUpdate:true`; uses [moment.js format string](https://momentjs.com/docs/#/displaying/format/)</p><p>**Type:** `string`<br>**Example:** `'HH:mm:ss'`<br>**Default value:** `'MMM D - h:mm:ss a'`|
+<!-- prettier-ignore-end -->
 
 Here is an example of an entry in `config.js`. Take note of `mealTypeName` and `mealSortOrder`. Here, we use the `side` meal type as a reminder of things we need to do to prepare for future meals, e.g., thaw meat. `mealTypeName` changes what appears, and `mealSortOrder` moves the snack entries to the top of the list for that day.
 
