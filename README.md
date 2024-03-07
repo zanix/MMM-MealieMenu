@@ -110,9 +110,8 @@ It is possible to use multiple instances of this module just by adding another e
 
 ## Special Thanks
 
-- [Michael Teeuw](https://github.com/MichMich) for creating the inspiring project [MagicMirror²](https://github.com/MagicMirrorOrg/MagicMirror). You can sponsor the MagicMirror² project through [GitHub](https://magicmirror.builders/#donate).
+- [Michael Teeuw](https://github.com/MichMich) for creating the project [MagicMirror²](https://github.com/MagicMirrorOrg/MagicMirror). You can sponsor the MagicMirror² project on their [donate](https://magicmirror.builders/#donate) page.
 - [Kael Spencer](https://github.com/kaelspencer) for creating the [MMM-PaprikaMenu](https://github.com/kaelspencer/MMM-PaprikaMenu) module, on which this one is originally based.
-- The community of MagicMirror² for help in the development process and all contributors for finding and fixing errors in this module.
 
 ## Dependencies
 
@@ -125,4 +124,4 @@ This package depends on the following:
 
 If you find any problems, bugs or have questions, please [open a GitHub issue](https://github.com/zanix/MMM-MealieMenu/issues) in this repository.
 
-Pull requests are of course also very welcome 🙂
+Pull requests are of course also very welcome
