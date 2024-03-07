@@ -1,0 +1,36 @@
+
+{% if error %}
+  <div class="light small">{{ error | safe }}</div>
+{% elif loading %}
+  <div class="dimmed light small">{{ phrases.loading | safe }}</div>
+{% endif %}
+
+{% if not loading %}
+  <div class="meal-items">
+    {% for meal in menu.meals %}
+    <div class="meal-item{% if meal.isToday %} today{% elif meal.shouldFade %} fade{% endif %}">
+      {% if config.showPictures and meal.photoUrl %}
+      <div class="meal-image">
+        <img src="{{ meal.photoUrl }}" {% if config.roundPictureCorners %}class="rounded"{% endif %}/>
+      </div>
+      {% endif %}
+      <div class="meal-info">
+        <div class="meal-header">
+          {{ meal.date }}{{ config.dateMealSeperator }}{{ meal.meal }}
+        </div>
+        <div class="meal-name">
+          {{ meal.name }}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="meta-timestamp" id="{{ moduleTimestampIdPrefix + identifier }}" data-timestamp="{{ timestamp }}">
+    {% if config.displayTimestamp %}
+    <div class="dimmed light xsmall">
+      {{ lastUpdated }}
+      </div>
+    {% endif %}
+  </div>
+{% endif %}

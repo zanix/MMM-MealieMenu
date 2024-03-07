@@ -1,0 +1,47 @@
+{
+  "name": "MMM-MealieMenu",
+  "version": "1.0.0",
+  "description": "A MagicMirror² module that displays your Mealie meal plan for the week.",
+  "repository": "zanix/MMM-MealieMenu",
+  "keywords": [
+    "MagicMirror",
+    "mealie",
+    "recipie"
+  ],
+  "author": {
+    "name": "Joshua Clark",
+    "url": "https://github.com/zanix"
+  },
+  "contributors": [
+    "https://github.com/zanix/MMM-MealieMenu/graphs/contributors"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zanix/MMM-MealieMenu/issues"
+  },
+  "homepage": "https://github.com/zanix/MMM-MealieMenu#readme",
+  "engines": {
+    "node": ">=16"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "moment": "^2.29.4"
+  },
+  "devDependencies": {
+    "@eslint/js": "^8.57.0",
+    "@stylistic/eslint-plugin": "^1.6.2",
+    "eslint": "^8.57.0",
+    "eslint-plugin-import": "^2.29.1",
+    "globals": "^14.0.0",
+    "markdownlint-cli": "^0.39.0",
+    "prettier": "^3.2.5",
+    "stylelint": "^16.2.1",
+    "stylelint-config-standard": "^36.0.0",
+    "stylelint-prettier": "^5.0.0"
+  },
+  "scripts": {
+    "lint": "eslint . && stylelint **/*.css && markdownlint . --ignore node_modules && prettier . --check",
+    "lint:fix": "eslint . --fix && stylelint **/*.css --fix && markdownlint . --ignore node_modules --fix && prettier . --write",
+    "test": "npm run lint"
+  }
+}

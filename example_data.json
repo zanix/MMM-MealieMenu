@@ -1,0 +1,57 @@
+{
+  "page": 1,
+  "per_page": 50,
+  "total": 1,
+  "total_pages": 1,
+  "items": [
+    {
+      "date": "2024-03-09",
+      "entryType": "dinner",
+      "title": "",
+      "text": "",
+      "recipeId": "2f595fb3-bd86-4e96-9e12-16dc8b57284d",
+      "id": 69,
+      "groupId": "52d26222-0f2f-4794-91ed-062418891874",
+      "userId": "4063d765-e592-4c22-9553-df5e46596c13",
+      "recipe": {
+        "id": "2f595fb3-bd86-4e96-9e12-16dc8b57284d",
+        "userId": "6f9f3394-8342-4fff-ba06-d84f7d821315",
+        "groupId": "52d26222-0f2f-4794-91ed-062418891874",
+        "name": "Homemade Pizza Dough",
+        "slug": "homemade-pizza-dough",
+        "image": "JUW3",
+        "recipeYield": "4 servings",
+        "totalTime": "1 Hour 42 Minutes",
+        "prepTime": "1 Hour 30 Minutes",
+        "cookTime": null,
+        "performTime": "12 Minutes",
+        "description": "Homemade pizza dough is easy and costs pennies on the dollar compared to store bought. Make a batch now and freeze it for later!",
+        "recipeCategory": [
+          {
+            "id": "e97f1ce4-2b8d-42e5-b541-6408c0ff47d5",
+            "name": "Dinner",
+            "slug": "dinner"
+          }
+        ],
+        "tags": [],
+        "tools": [
+          {
+            "id": "c846d09f-3df2-4af7-a8e0-0cfb5476ce14",
+            "name": "Stand Mixer",
+            "slug": "stand-mixer",
+            "onHand": false
+          }
+        ],
+        "rating": null,
+        "orgURL": "https://www.budgetbytes.com/pizza-dough/",
+        "dateAdded": "2023-10-15",
+        "dateUpdated": "2024-03-02T08:02:18.960834",
+        "createdAt": "2023-10-15T01:13:51.984830",
+        "updateAt": "2024-03-02T08:02:18.965467",
+        "lastMade": "2024-03-02T08:02:18.836304"
+      }
+    }
+  ],
+  "next": null,
+  "previous": null
+}
