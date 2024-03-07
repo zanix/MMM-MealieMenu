@@ -91,12 +91,12 @@ Here is an example of an entry in `config.js`. Take note of `mealTypeName` and `
     header: "Dinner Menu",
     position: "top_left",
     config: {
-        apiKey: "eyhJbcG..."                   // Not needed when using username/password
+        apiKey: "eyhJbcG...",                  // Not needed when using username/password
         username: "yourmealieemail@email.com", // Not needed when using apiKey
         password: "Secret!",                   // Not needed when using apiKey
         weekStartsOnMonday: true,
         roundPictureCorners: true,
-        mealSortOrder: ["side", "breakfast", "lunch", "dinner"]
+        mealSortOrder: ["side", "breakfast", "lunch", "dinner"],
         mealTypeName: {
             side: "Meal Prep"
         }
