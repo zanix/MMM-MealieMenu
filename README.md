@@ -1,9 +1,14 @@
 # MMM-MealieMenu
 
 [![GitHub issues](https://img.shields.io/github/issues/zanix/mmm-mealiemenu?style=flat-square)](https://github.com/zanix/MMM-MealieMenu/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/zanix/mmm-mealiemenu?style=flat-square)](https://github.com/zanix/MMM-MealieMenu/pulls)
 [![GitHub forks](https://img.shields.io/github/forks/zanix/mmm-mealiemenu?style=flat-square)](https://github.com/zanix/MMM-MealieMenu/network)
 [![GitHub stars](https://img.shields.io/github/stars/zanix/mmm-mealiemenu?style=flat-square)](https://github.com/zanix/MMM-MealieMenu/stargazers)
-[![GitHub license](https://img.shields.io/github/license/zanix/mmm-mealiemenu?style=flat-square)](https://github.com/zanix/MMM-MealieMenu/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/zanix/mmm-mealiemenu?style=flat-square)](https://github.com/zanix/MMM-MealieMenu/blob/master/LICENSE)
+
+[![Build status](https://img.shields.io/github/actions/workflow/status/zanix/mmm-mealiemenu/automated-tests.yaml?branch=main&style=flat-square&logo=github-actions&logoColor=838B95)](https://github.com/zanix/MMM-MealieMenu/actions/workflows/automated-tests.yaml)
+[![Last commit](https://img.shields.io/github/last-commit/zanix/mmm-mealiemenu/main?style=flat-square&logo=github&logoColor=838B95)](https://github.com/zanix/MMM-MealieMenu/commits/main)
+[![Commits](https://img.shields.io/github/commit-activity/m/zanix/mmm-mealiemenu/main?style=flat-square&logo=github&logoColor=838B95)](https://github.com/zanix/MMM-MealieMenu/commits/main)
 
 **MMM-MealieMenu is a module for [MagicMirror²](https://github.com/MagicMirrorOrg/MagicMirror) that displays your [Mealie](https://mealie.io) meal plan for the week.**
 
@@ -49,10 +54,6 @@ npm install --omit=dev
 ```
 
 Restart MagicMirror after updating.
-
-```bash
-pm2 restart MagicMirror
-```
 
 ## Configuration
 
@@ -124,4 +125,4 @@ This package depends on the following:
 
 If you find any problems, bugs or have questions, please [open a GitHub issue](https://github.com/zanix/MMM-MealieMenu/issues) in this repository.
 
-Pull requests are of course also very welcome
+Pull requests are of course very welcome.
