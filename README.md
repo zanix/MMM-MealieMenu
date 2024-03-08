@@ -1,4 +1,4 @@
-# MMM-MealieMenu
+# MMM-MealieMenu ![Version](https://img.shields.io/github/package-json/v/zanix/mmm-mealiemenu?style=flat-square)
 
 [![GitHub issues](https://img.shields.io/github/issues/zanix/mmm-mealiemenu?style=flat-square)](https://github.com/zanix/MMM-MealieMenu/issues)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/zanix/mmm-mealiemenu?style=flat-square)](https://github.com/zanix/MMM-MealieMenu/pulls)
@@ -68,6 +68,7 @@ These are the possible options:
 | `apiKey`                        | <p>An API key generated from a user profile in Mealie.</p><p>**REQUIRED** When not using username and password<br>**Type:** `string`<br>**Example:** `"eyhJbcG..."`<br>**Default value:** none</p><p>**Note:** You can generate a key by going to your user profile in Mealie then to API Tokens link (or using this path `/user/profile/api-tokens`).</p>|
 | `username`                      | <p>The username/email for your Mealie account.</p><p>**REQUIRED** When not using `apiKey`<br>**Type:** `string`<br>**Example:** `"yourmeailieemail@email.com"`<br>**Default value:** none</p>|
 | `password`                      | <p>The password for your for Mealie account.</p><p>**REQUIRED** When not using `apiKey`<br>**Type:** `string`<br>**Example:** `"Secret!"`<br>**Default value:** none</p>|
+| `groupId`                       | <p>The Group ID (as a UUID) to use when fetching the meal plan.</p><p>**Type:** `string`<br>**Example:** `"c0aa0c1c-bdbb-4948-823b-2a725fb05ce1"`<br>**Default value:** none ("Home" group)</p><p>**Note 1:** You can get the UUID of a group from Settings > Groups.</p><p>**Note 2:** The default "Home" group is used when this is blank.</p>|
 | `weekStartsOnMonday`            | <p>Show Monday as the first day of the week. Set to `true` to show Monday as the first day of the week.</p><p>**Type:** `boolean`<br>**Default value:** `false`<br>**Possible values:** `true` and `false`|
 | `priorDayLimit`                 | <p>How many previous days of the current week will be displayed. </p><p>**Type:** `integer`<br>**Example:** `5`<br>**Default value:** `7`<br>**Unit:** `days`</p><p>**Note:** If `0`, only today until the end of the week will be shown.</p>|
 | `priorEntryLimit`               | <p>How many entries from previous days should be shown in total. </p><p>**Type:** `integer`<br>**Example:** `25`<br>**Default value:** `50`<br>**Unit:** `days`</p><p>**Note:** `priorDayLimit` takes precedence. For example, with `3` entries per day, `priorEntryLimit` set to `5` and `priorDayLimit` set to `1`, you will only see `3` prior entries.</p>|
@@ -118,7 +119,6 @@ It is possible to use multiple instances of this module just by adding another e
 
 This package depends on the following:
 
-- [axios](https://www.npmjs.com/package/axios)
 - [moment](https://www.npmjs.com/package/moment)
 
 ## Contributing

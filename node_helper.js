@@ -1,6 +1,5 @@
 const NodeHelper = require("node_helper");
 const Log = require("logger");
-const axios = require("axios").default;
 const moment = require("moment");
 
 // Example result from mealplans API see example_data.json.
@@ -8,18 +7,17 @@ const moment = require("moment");
 module.exports = NodeHelper.create({
   start () {
     Log.log(`Starting node_helper for module [${this.name}]`);
-    this.mealieApi = null;
     this.token = null;
     this.outstandingRequest = false;
   },
 
   socketNotificationReceived (notification, payload) {
     switch (notification) {
-      case "MEALIE_CREATE_FETCHER":
+      case "MEALIE_INIT":
         // Use API Key or fetch a token.
         if (payload.apiKey) {
           this.token = payload.apiKey;
-          this.createFetcher(payload);
+          this.initComplete(payload);
         } else {
           this.getToken(payload);
         }
@@ -31,20 +29,35 @@ module.exports = NodeHelper.create({
     }
   },
 
+  initComplete (config) {
+    this.sendSocketNotification("MEALIE_INITIALIZED", {
+      identifier: config.identifier
+    });
+  },
+
   getToken (config) {
     const params = new URLSearchParams();
     params.append("username", config.username);
     params.append("password", config.password);
 
-    axios.post(`${config.host}/api/auth/token`, params, {
+    fetch(`${config.host}/api/auth/token`, {
+      method: "POST",
       headers: {
-        accept: "application/json",
+        Accept: "application/json",
         "Content-Type": "application/x-www-form-urlencoded"
-      }
+      },
+      body: params
     })
       .then((response) => {
-        this.token = response.data.access_token;
-        this.createFetcher(config);
+        if (response.ok) {
+          return response;
+        }
+        throw response.statusText;
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        this.token = data.access_token;
+        this.initComplete(config);
       })
       .catch((error) => {
         this.sendSocketNotification("MEALIE_ERROR", {
@@ -53,22 +66,6 @@ module.exports = NodeHelper.create({
           identifier: config.identifier
         });
       });
-  },
-
-  createFetcher (config) {
-    // Create single API handler
-    if (this.mealieApi === null) {
-      this.mealieApi = axios.create({
-        baseURL: config.host,
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer ${this.token}`
-        }
-      });
-    }
-    this.sendSocketNotification("MEALIE_INITIALIZED", {
-      identifier: config.identifier
-    });
   },
 
   getMeals (config) {
@@ -85,17 +82,35 @@ module.exports = NodeHelper.create({
 
     Log.info(`[${this.name}] Week starts: ${startOfWeek.format("YYYY-MM-DD")}, next week starts: ${nextWeek.format("YYYY-MM-DD")}`);
 
+    const url = new URL(`${config.host}/api/groups/mealplans`);
+
+    const params = new URLSearchParams();
+    params.append("start_date", startOfWeek.format("YYYY-MM-DD"));
+    params.append("end_date", lastDayOfWeek.format("YYYY-MM-DD"));
+    params.append("orderBy", "date");
+    params.append("orderDirection", "asc");
+    if (config.groupId) {
+      params.append("group_id", config.groupId);
+    }
+    url.search = params.toString();
+
     // Get the full list of meals from Mealie.
-    this.mealieApi.get("/api/groups/mealplans", {
-      params: {
-        start_date: startOfWeek.format("YYYY-MM-DD"), // eslint-disable-line camelcase
-        end_date: lastDayOfWeek.format("YYYY-MM-DD"), // eslint-disable-line camelcase
-        orderBy: "date",
-        orderDirection: "asc"
+    fetch(url, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${this.token}`
       }
     })
       .then((response) => {
-        const meals = response.data.items;
+        if (response.ok) {
+          return response;
+        }
+        throw response.statusText;
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        const meals = data.items;
 
         this.sendSocketNotification("MEALIE_MENU_DATA", {
           identifier: config.identifier,
@@ -109,7 +124,7 @@ module.exports = NodeHelper.create({
           identifier: config.identifier
         });
       })
-      .then(() => {
+      .finally(() => {
         this.outstandingRequest = false;
       });
   },

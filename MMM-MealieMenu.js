@@ -13,6 +13,7 @@ Module.register("MMM-MealieMenu", {
     apiKey: "",                        // An API key generated from a user profile in Mealie.
     username: "",                      // The username/email for your Mealie account.
     password: "",                      // The password for your for Mealie account.
+    groupId: "",                       // Group ID of the meal plan.
 
     // Look and Feel
     weekStartsOnMonday: false,         // Show Monday as the first day of the week.
@@ -52,7 +53,7 @@ Module.register("MMM-MealieMenu", {
     this.sanitzeConfig();
 
     // Validate host.
-    if (!this.config.host) {
+    if (!this.config.host || !this.isValidURL(this.config.host)) {
       Log.error(this.translate("ERROR_INVALID", {value: "host"}));
       this.error = this.translate("ERROR_NO_HOST");
 
@@ -92,7 +93,7 @@ Module.register("MMM-MealieMenu", {
       return;
     }
 
-    this.sendSocketNotification("MEALIE_CREATE_FETCHER", {
+    this.sendSocketNotification("MEALIE_INIT", {
       identifier: this.identifier,
       host: this.config.host,
       apiKey: this.config.apiKey,
@@ -170,7 +171,7 @@ Module.register("MMM-MealieMenu", {
 
           this.formattedMenuData = {meals: this.formatMeals(payload.meals)};
 
-          Log.info(this.formattedMenuData);
+          // Log.info(this.formattedMenuData);
           this.error = null;
           this.updateDom(this.config.animationSpeed);
 
@@ -244,6 +245,7 @@ Module.register("MMM-MealieMenu", {
       apiKey: this.config.apiKey,
       username: this.config.username,
       password: this.config.password,
+      groupId: this.config.groupId,
       weekStartsOnMonday: this.config.weekStartsOnMonday
     });
   },
@@ -361,6 +363,19 @@ Module.register("MMM-MealieMenu", {
     if (this.config.updateInterval < 1) {
       this.config.updateInterval = 1;
       Log.warn("updateInterval should be 1 or greater. Setting to 1.");
+    }
+  },
+
+  /**
+   * Assert valid URL.
+   */
+  isValidURL (url) {
+    try {
+      // eslint-disable-next-line no-new
+      new URL(url);
+      return true;
+    } catch (err) {
+      return false;
     }
   }
 });
