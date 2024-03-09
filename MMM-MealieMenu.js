@@ -276,11 +276,13 @@ Module.register("MMM-MealieMenu", {
     const formatted = [];
     for (const meal of meals) {
       formatted.push({
-        name: meal.recipe.name,
+        name: meal.recipe?.name || meal.title,
         rawDate: meal.date,
         date: moment(meal.date).format(this.config.dateFormat),
         meal: this.typeToMealDisplay(meal.entryType),
-        photoUrl: `${this.config.host}/api/media/recipes/${meal.recipe.id}/images/min-original.webp`,
+        photoUrl: meal.recipe?.id
+          ? `${this.config.host}/api/media/recipes/${meal.recipe.id}/images/min-original.webp`
+          : "",
         isToday: today.isSame(meal.date),
         shouldFade: this.config.fadePriorEntries && today.isAfter(meal.date)
       });
