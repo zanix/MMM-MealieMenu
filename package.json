@@ -21,17 +21,21 @@
   },
   "homepage": "https://github.com/zanix/MMM-MealieMenu#readme",
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "dependencies": {
     "moment": "^2.29.4"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.0.3",
+    "@commitlint/config-conventional": "^19.0.3",
     "@eslint/js": "^8.57.0",
     "@stylistic/eslint-plugin": "^1.6.2",
     "eslint": "^8.57.0",
     "eslint-plugin-import": "^2.29.1",
     "globals": "^14.0.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
     "markdownlint-cli": "^0.39.0",
     "prettier": "^3.2.5",
     "stylelint": "^16.2.1",
@@ -41,6 +45,12 @@
   "scripts": {
     "lint": "eslint . && stylelint **/*.css && markdownlint . --ignore node_modules && prettier . --check",
     "lint:fix": "eslint . --fix && stylelint **/*.css --fix && markdownlint . --ignore node_modules --fix && prettier . --write",
-    "test": "npm run lint"
+    "test": "npm run lint",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.js": "eslint --cache --fix",
+    "*.css": "stylelint --fix",
+    "*": "prettier --ignore-unknown --write"
   }
 }
