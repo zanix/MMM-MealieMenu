@@ -1,0 +1,38 @@
+name: Release
+
+on:
+  push:
+    branches: [main, develop]
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      id-token: write
+
+    steps:
+      - name: 📥 Check out repository
+        uses: actions/checkout@v4
+      - name: 📜 Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+      - name: 🔗 Install dependencies
+        run: npx ci
+      - name: 🧩 Install semantic-release extra plugins
+        run: npm install --save-dev @semantic-release/changelog @semantic-release/git
+      - name: 🧹 Lint
+        run: npm run lint:fix
+      - name: ✅ Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HUSKY: 0
+        run: npx semantic-release
