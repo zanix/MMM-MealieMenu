@@ -40,6 +40,7 @@
     "lint-staged": "^15.2.2",
     "markdownlint-cli": "^0.39.0",
     "prettier": "^3.2.5",
+    "semantic-release": "^22.0.12",
     "stylelint": "^16.2.1",
     "stylelint-config-standard": "^36.0.0",
     "stylelint-prettier": "^5.0.0"
@@ -48,7 +49,7 @@
     "lint": "eslint . && stylelint **/*.css && markdownlint . --ignore node_modules && prettier . --check",
     "lint:fix": "eslint . --fix && stylelint **/*.css --fix && markdownlint . --ignore node_modules --fix && prettier . --write",
     "test": "npm run lint",
-    "prepare": "husky"
+    "prepare": "husky || true"
   },
   "lint-staged": {
     "*.js": "eslint --cache --fix",
