@@ -22,6 +22,8 @@ Module.register("MMM-MealieMenu", {
     fadePriorEntries: true,            // Fade previous days in the current week.
     showPictures: true,                // Show pictures corresponding to that days meal.
     roundPictureCorners: false,        // Round the meal picture corners.
+    defaultPicture: "mealie.png",      // Default image to display for missing recipe images or meal notes.
+    showDescription: false,            // Show the recipe/meal description.
     dateFormat: "dddd",                // Display format for the date; uses moment.js format string
     dateMealSeperator: " - ",          // Set the separator between the date and meal type.
     mealSortOrder: ["breakfast", "lunch", "dinner", "side"], // An array determining the order and visibility of the meal type headers.
@@ -50,8 +52,6 @@ Module.register("MMM-MealieMenu", {
     this.dataRefreshTimestamp = null;
     this.dataRefreshDisplayTime = null;
 
-    this.sanitzeConfig();
-
     // Validate host.
     if (!this.config.host || !this.isValidURL(this.config.host)) {
       Log.error(this.translate("ERROR_INVALID", {value: "host"}));
@@ -59,9 +59,6 @@ Module.register("MMM-MealieMenu", {
 
       return;
     }
-
-    // Strip trailing slashes.
-    this.config.host = this.config.host.replace(/\/$/u, "");
 
     // Validate API key or username/password.
     if (!this.config.apiKey) {
@@ -92,6 +89,8 @@ Module.register("MMM-MealieMenu", {
 
       return;
     }
+
+    this.sanitzeConfig();
 
     this.sendSocketNotification("MEALIE_INIT", {
       identifier: this.identifier,
@@ -277,6 +276,7 @@ Module.register("MMM-MealieMenu", {
     for (const meal of meals) {
       formatted.push({
         name: meal.recipe?.name || meal.title,
+        description: meal.recipe?.description || meal.text,
         rawDate: meal.date,
         date: moment(meal.date).format(this.config.dateFormat),
         meal: this.typeToMealDisplay(meal.entryType),
@@ -352,6 +352,17 @@ Module.register("MMM-MealieMenu", {
    * Assert values for configuration.
    */
   sanitzeConfig () {
+    // Strip trailing slashes.
+    this.config.host = this.config.host.replace(/\/$/u, "");
+
+    // Check for an external default image.
+    if (
+      !this.config.defaultPicture.startsWith("http") &&
+      !this.config.defaultPicture.includes("/")
+    ) {
+      this.config.defaultPicture = this.file(this.config.defaultPicture);
+    }
+
     if (this.config.priorDayLimit < 0) {
       this.config.priorDayLimit = 0;
       Log.warn("priorDayLimit should be 0 or greater. Setting to 0.");

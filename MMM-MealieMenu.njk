@@ -9,9 +9,11 @@
   <div class="meal-items">
     {% for meal in menu.meals %}
     <div class="meal-item{% if meal.isToday %} today{% elif meal.shouldFade %} fade{% endif %}">
-      {% if config.showPictures and meal.photoUrl %}
+      {% if config.showPictures %}
       <div class="meal-image">
-        <img src="{{ meal.photoUrl }}" {% if config.roundPictureCorners %}class="rounded"{% endif %}/>
+        <img src="{{ meal.photoUrl }}" {% if config.roundPictureCorners %}class="rounded"{% endif %}
+          onerror="src='{{ config.defaultPicture }}'"
+        />
       </div>
       {% endif %}
       <div class="meal-info">
@@ -21,6 +23,11 @@
         <div class="meal-name">
           {{ meal.name }}
         </div>
+        {% if config.showDescription %}
+        <div class="meal-description">
+          {{ meal.description }}
+        </div>
+        {% endif %}
       </div>
     </div>
     {% endfor %}
