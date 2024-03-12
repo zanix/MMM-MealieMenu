@@ -18,7 +18,9 @@
       {% endif %}
       <div class="meal-info">
         <div class="meal-header">
-          {{ meal.date }}{{ config.dateMealSeperator }}{{ meal.meal }}
+          <span class="meal-date">{{ meal.date }}</span>
+          <span class="meal-separator">{{ config.dateMealSeperator }}</span>
+          <span class="meal-type">{{ meal.meal }}</span>
         </div>
         <div class="meal-name">
           {{ meal.name }}
