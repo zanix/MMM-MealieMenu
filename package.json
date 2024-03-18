@@ -27,7 +27,7 @@
     "moment": "^2.29.4"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.0.3",
+    "@commitlint/cli": "^19.2.0",
     "@commitlint/config-conventional": "^19.0.3",
     "@eslint/js": "^8.57.0",
     "@semantic-release/changelog": "^6.0.3",
