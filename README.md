@@ -39,8 +39,6 @@ Just clone the module into your modules folder of your MagicMirror² and execute
 ```bash
 cd ~/MagicMirror/modules
 git clone https://github.com/zanix/MMM-MealieMenu
-cd MMM-MealieMenu
-npm install --omit=dev
 ```
 
 ## Update
@@ -50,7 +48,6 @@ Go to the module’s folder inside MagicMirror modules folder and pull the lates
 ```bash
 cd ~/MagicMirror/modules/MMM-MealieMenu
 git pull
-npm install --omit=dev
 ```
 
 Restart MagicMirror after updating.
@@ -116,12 +113,6 @@ It is possible to use multiple instances of this module just by adding another e
 
 - [Michael Teeuw](https://github.com/MichMich) for creating the project [MagicMirror²](https://github.com/MagicMirrorOrg/MagicMirror). You can sponsor the MagicMirror² project on their [donate](https://magicmirror.builders/#donate) page.
 - [Kael Spencer](https://github.com/kaelspencer) for creating the [MMM-PaprikaMenu](https://github.com/kaelspencer/MMM-PaprikaMenu) module, on which this one is originally based.
-
-## Dependencies
-
-This package depends on the following:
-
-- [moment](https://www.npmjs.com/package/moment)
 
 ## Contributing
 
