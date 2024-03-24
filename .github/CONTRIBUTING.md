@@ -24,4 +24,4 @@ There are currently no tests.
 
 ## Submitting Issues
 
-Please refer to the [Bug Report](.github/ISSUE_TEMPLATE/bug_report.md) or [Feature Request](.github/ISSUE_TEMPLATE/feature_request.md) Issue templates before [submitting an issue](issues).
+Please refer to the [Bug Report](/.github/ISSUE_TEMPLATE/bug_report.md) or [Feature Request](/.github/ISSUE_TEMPLATE/feature_request.md) Issue templates before [submitting an issue](issues).

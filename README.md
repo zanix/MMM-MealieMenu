@@ -118,7 +118,7 @@ It is possible to use multiple instances of this module just by adding another e
 
 If you find any problems, bugs or have questions, please [open a GitHub issue](https://github.com/zanix/MMM-MealieMenu/issues) in this repository.
 
-Pull requests are of course very welcome. Please see [Contributing](.github/CONTRIBUTING.md) and the [Pull Reqeust Template](.github/PULL_REQEUST_TEMPLATE.md) for details.
+Pull requests are of course very welcome. Please see [Contributing](.github/CONTRIBUTING.md) and the [Pull Request Template](.github/PULL_REQUEST_TEMPLATE.md) for details.
 
 [mealie-io-link]: https://mealie.io
 [moment-format-link]: https://momentjs.com/docs/#/displaying/format/
