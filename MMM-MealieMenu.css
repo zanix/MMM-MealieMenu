@@ -81,3 +81,7 @@
   color: #fff;
   font-size: calc(var(--font-size-medium) - 0.3rem);
 }
+
+.MMM-MealieMenu .meal-empty {
+  text-align: center;
+}

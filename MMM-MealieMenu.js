@@ -137,7 +137,8 @@ Module.register("MMM-MealieMenu", {
   getTemplateData () {
     return {
       phrases: {
-        loading: this.translate("LOADING")
+        loading: this.translate("LOADING"),
+        emptyMealPlan: this.translate("MEALIE_EMPTY_MEALPLAN")
       },
       hasError: Boolean(this.error),
       error: this.error,

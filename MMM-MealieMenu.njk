@@ -33,6 +33,12 @@
       </div>
     </div>
     {% endfor %}
+
+    {% if menu.meals | length == 0 %}
+    <div class="meal-empty">
+      {{ phrases.emptyMealPlan | safe }}
+    </div>
+    {% endif %}
   </div>
 
   <div class="meta-timestamp" id="{{ moduleTimestampIdPrefix + identifier }}" data-timestamp="{{ timestamp }}">
