@@ -9,6 +9,7 @@
   "FETCH_ERROR": "Fetch Error: There was an error fetching data from Mealie.",
   "MEALIE_SUSPEND": "Function suspend - module: {name} with identifier: {identifier}",
   "MEALIE_RESUME": "Function resume - module: {name} with identifier: {identifier}",
+  "MEALIE_EMPTY_MEALPLAN": "There are no meals planned.",
   "MEAL_TYPES": {
     "breakfast": "Breakfast",
     "lunch": "Lunch",
