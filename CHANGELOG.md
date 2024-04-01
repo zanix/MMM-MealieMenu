@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/zanix/MMM-MealieMenu/compare/v1.3.0...v1.4.0) (2024-04-01)
+
+
+### Features
+
+* add message when meal plan is empty ([11d0427](https://github.com/zanix/MMM-MealieMenu/commit/11d042792632b67bade12c25f1f2c8f66b7f7ddb))
+
 # [1.3.0](https://github.com/zanix/MMM-MealieMenu/compare/v1.2.0...v1.3.0) (2024-03-12)
 
 
