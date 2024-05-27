@@ -1,3 +1,17 @@
+# [1.5.0](https://github.com/zanix/MMM-MealieMenu/compare/v1.4.0...v1.5.0) (2024-05-27)
+
+
+### Bug Fixes
+
+* add more logging ([b7b7a12](https://github.com/zanix/MMM-MealieMenu/commit/b7b7a1290aa2b794e56d96690770327e14ce8a82))
+* change updateInterval default to 1 hour ([69179d9](https://github.com/zanix/MMM-MealieMenu/commit/69179d979e7dd6fe1081469a14b253c68f3c418f))
+* reset outstandingRequest on fetch error ([b1ce996](https://github.com/zanix/MMM-MealieMenu/commit/b1ce99649adb7f95584468f61b620e9410f81263))
+
+
+### Features
+
+* add currentWeek, dayLimit, and entryLimit ([c84291b](https://github.com/zanix/MMM-MealieMenu/commit/c84291b55ead550908b9711d6a715f6198c1a564))
+
 # [1.4.0](https://github.com/zanix/MMM-MealieMenu/compare/v1.3.0...v1.4.0) (2024-04-01)
 
 

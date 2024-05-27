@@ -1,6 +1,6 @@
 {
   "name": "MMM-MealieMenu",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "A MagicMirror² module that displays your Mealie meal plan for the week.",
   "repository": "zanix/MMM-MealieMenu",
   "keywords": [
