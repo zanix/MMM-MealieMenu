@@ -60,6 +60,7 @@ module.exports = NodeHelper.create({
         this.initComplete(config);
       })
       .catch((error) => {
+        Log.error(`[${this.name}] Auth error:`, JSON.stringify(error));
         this.sendSocketNotification("MEALIE_ERROR", {
           error: "AUTH_ERROR",
           details: error,
@@ -111,6 +112,7 @@ module.exports = NodeHelper.create({
       .then((response) => response.json())
       .then((data) => {
         const meals = data.items;
+        Log.debug(`[${this.name}] Meals:`, JSON.stringify(meals));
 
         this.sendSocketNotification("MEALIE_MENU_DATA", {
           identifier: config.identifier,
@@ -118,6 +120,8 @@ module.exports = NodeHelper.create({
         });
       })
       .catch((error) => {
+        Log.error(`[${this.name}] Fetch error:`, JSON.stringify(error));
+
         this.sendSocketNotification("MEALIE_ERROR", {
           error: "FETCH_ERROR",
           details: error,
