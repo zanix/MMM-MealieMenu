@@ -113,6 +113,7 @@ It is possible to use multiple instances of this module just by adding another e
 
 - [Michael Teeuw](https://github.com/MichMich) for creating the project [MagicMirror²](https://github.com/MagicMirrorOrg/MagicMirror). You can sponsor the MagicMirror² project on their [donate](https://magicmirror.builders/#donate) page.
 - [Kael Spencer](https://github.com/kaelspencer) for creating the [MMM-PaprikaMenu](https://github.com/kaelspencer/MMM-PaprikaMenu) module, on which this one is originally based.
+- [Brian O'Connor](https://github.com/btoconnor) for contributing to this project.
 
 ## Contributing
 
