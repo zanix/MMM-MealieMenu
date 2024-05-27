@@ -120,6 +120,7 @@ module.exports = NodeHelper.create({
         });
       })
       .catch((error) => {
+        this.outstandingRequest = false;
         Log.error(`[${this.name}] Fetch error:`, JSON.stringify(error));
 
         this.sendSocketNotification("MEALIE_ERROR", {
