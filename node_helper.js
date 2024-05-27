@@ -60,6 +60,7 @@ module.exports = NodeHelper.create({
         this.initComplete(config);
       })
       .catch((error) => {
+        Log.error(`[${this.name}] Auth error:`, JSON.stringify(error));
         this.sendSocketNotification("MEALIE_ERROR", {
           error: "AUTH_ERROR",
           details: error,
@@ -76,17 +77,36 @@ module.exports = NodeHelper.create({
 
     this.outstandingRequest = true;
 
-    const startOfWeek = this.getFirstDayOfWeek(config.weekStartsOnMonday);
-    const nextWeek = startOfWeek.clone().add(7, "days");
-    const lastDayOfWeek = nextWeek.clone().subtract(1, "days");
+    let startDate = moment();
+    let endDate = moment();
 
-    Log.info(`[${this.name}] Week starts: ${startOfWeek.format("YYYY-MM-DD")}, next week starts: ${nextWeek.format("YYYY-MM-DD")}`);
+    if (config.currentWeek) {
+      const startOfWeek = this.getFirstDayOfWeek(config.weekStartsOnMonday);
+      const endOfWeek = startDate.clone().add(6, "days");
+
+      // Find the latest start date.
+      startDate = moment.max([
+        startOfWeek,
+        moment().subtract(config.priorDayLimit, "days")
+      ]);
+
+      // Find the earliest end date.
+      endDate = moment.min([
+        endOfWeek,
+        moment().add(config.dayLimit, "days")
+      ]);
+    } else {
+      startDate.subtract(config.priorDayLimit, "days");
+      endDate.add(config.dayLimit, "days");
+    }
+
+    Log.info(`[${this.name}] Fetching meals: Start Date ${startDate.format("YYYY-MM-DD")} - End date ${endDate.format("YYYY-MM-DD")}`);
 
     const url = new URL(`${config.host}/api/groups/mealplans`);
 
     const params = new URLSearchParams();
-    params.append("start_date", startOfWeek.format("YYYY-MM-DD"));
-    params.append("end_date", lastDayOfWeek.format("YYYY-MM-DD"));
+    params.append("start_date", startDate.format("YYYY-MM-DD"));
+    params.append("end_date", endDate.format("YYYY-MM-DD"));
     params.append("orderBy", "date");
     params.append("orderDirection", "asc");
     if (config.groupId) {
@@ -111,6 +131,7 @@ module.exports = NodeHelper.create({
       .then((response) => response.json())
       .then((data) => {
         const meals = data.items;
+        Log.debug(`[${this.name}] Meals:`, JSON.stringify(meals));
 
         this.sendSocketNotification("MEALIE_MENU_DATA", {
           identifier: config.identifier,
@@ -118,6 +139,9 @@ module.exports = NodeHelper.create({
         });
       })
       .catch((error) => {
+        this.outstandingRequest = false;
+        Log.error(`[${this.name}] Fetch error:`, JSON.stringify(error));
+
         this.sendSocketNotification("MEALIE_ERROR", {
           error: "FETCH_ERROR",
           details: error,

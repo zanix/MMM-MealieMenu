@@ -15,25 +15,30 @@ Module.register("MMM-MealieMenu", {
     password: "",                      // The password for your for Mealie account.
     groupId: "",                       // Group ID of the meal plan.
 
-    // Look and Feel
+    // Meal entries
+    currentWeek: true,                 // Only show meals for the current week.
     weekStartsOnMonday: false,         // Show Monday as the first day of the week.
-    priorDayLimit: 7,                  // How many previous days of the current week will be displayed.
+    dayLimit: 7,                       // How many days will be displayed after today.
+    priorDayLimit: 2,                  // How many previous days will be displayed.
+    entryLimit: 50,                    // How many entries from future days should be shown in total.
     priorEntryLimit: 50,               // How many entries from previous days should be shown in total.
+
+    // Look and Feel
     fadePriorEntries: true,            // Fade previous days in the current week.
     showPictures: true,                // Show pictures corresponding to that days meal.
     roundPictureCorners: false,        // Round the meal picture corners.
     defaultPicture: "mealie.png",      // Default image to display for missing recipe images or meal notes.
     showDescription: false,            // Show the recipe/meal description.
-    dateFormat: "dddd",                // Display format for the date; uses moment.js format string
+    dateFormat: "dddd",                // Display format for the date; uses moment.js format string.
     dateMealSeperator: " - ",          // Set the separator between the date and meal type.
     mealSortOrder: ["breakfast", "lunch", "dinner", "side"], // An array determining the order and visibility of the meal type headers.
     mealTypeName: {},                  // An object defining strings which will replacethe meal type header names.
-    updateInterval: 60,                // How often should the data be updated in seconds.
+    updateInterval: 60 * 60,           // How often should the data be updated in seconds.
     animationSpeed: 500,               // Speed of the update animation in milliseconds.
 
     // Display last update time
-    displayLastUpdate: false,          // Add line after the tasks with the last server update time
-    displayLastUpdateFormat: "MMM D - h:mm:ss a" // Format to display the last update; uses moment.js format string
+    displayLastUpdate: false,          // Add line after the meals with the last server update time.
+    displayLastUpdateFormat: "MMM D - h:mm:ss a" // Format to display the last update; uses moment.js format string.
   },
 
   /**
@@ -246,7 +251,10 @@ Module.register("MMM-MealieMenu", {
       username: this.config.username,
       password: this.config.password,
       groupId: this.config.groupId,
-      weekStartsOnMonday: this.config.weekStartsOnMonday
+      weekStartsOnMonday: this.config.weekStartsOnMonday,
+      currentWeek: this.config.currentWeek,
+      dayLimit: this.config.dayLimit,
+      priorDayLimit: this.config.priorDayLimit
     });
   },
 
@@ -297,25 +305,44 @@ Module.register("MMM-MealieMenu", {
    */
   filterDaysAndEntries (sortedMenu) {
     const today = moment().startOf("day");
-    const reversed = sortedMenu.reverse();
+    const reversed = sortedMenu.toReversed();
     const filtered = [];
     let entriesBeforeTodayCount = 0;
+    let entriesAfterTodayCount = 0;
 
-    for (const meal of reversed) {
-      const days = moment(meal.rawDate).diff(today, "days");
-
-      // If days < 0, this is a previous entry. The config may limit how many of these we show.
-      if (days < 0) {
-        entriesBeforeTodayCount += 1;
+    // Filter future entries first.
+    for (const meal of sortedMenu) {
+      // Break when we reach the max number of entries.
+      if (entriesAfterTodayCount >= this.config.entryLimit) {
+        break;
       }
 
       // days is the number of days between today and this menu items date; a negative value for past items.
-      // Add it to our result set if it is 0+ (today or in the future), and if this.config.priorDayLimit + days is 0+.
-      // days >= 0 can just be rolled into the priorDayLimit check.
-      // Example: priorDayLimit: 3, menu two days ago -> days: -2, 3 + -2 = 1, add it to the result.
-      //
-      // Additionally, only show max this.config.priorEntryLimit.
-      if (this.config.priorDayLimit + days >= 0 && this.config.priorEntryLimit >= entriesBeforeTodayCount) {
+      const days = moment(meal.rawDate).diff(today, "days");
+
+      // If days >= 0, this is a future entry. The config may limit how many of these we show.
+      // Add it to our result set if it is after today and this.config.entryLimit is not reached.
+      if (days >= 0 && this.config.entryLimit >= entriesAfterTodayCount) {
+        entriesAfterTodayCount += 1;
+        filtered.push(meal);
+      }
+    }
+
+    filtered.reverse();
+
+    for (const meal of reversed) {
+      // Break when we reach the max number of entries.
+      if (entriesBeforeTodayCount >= this.config.priorEntryLimit) {
+        break;
+      }
+
+      // days is the number of days between today and this menu items date; a negative value for past items.
+      const days = moment(meal.rawDate).diff(today, "days");
+
+      // If days < 0, this is a previous entry. The config may limit how many of these we show.
+      // Add it to our result set if it is before today and this.config.priorEntryLimit is not reached.
+      if (days < 0 && this.config.priorEntryLimit >= entriesBeforeTodayCount) {
+        entriesBeforeTodayCount += 1;
         filtered.push(meal);
       }
     }
@@ -364,9 +391,19 @@ Module.register("MMM-MealieMenu", {
       this.config.defaultPicture = this.file(this.config.defaultPicture);
     }
 
+    if (this.config.dayLimit < 0) {
+      this.config.dayLimit = 0;
+      Log.warn("dayLimit should be 0 or greater. Setting to 0.");
+    }
+
     if (this.config.priorDayLimit < 0) {
       this.config.priorDayLimit = 0;
       Log.warn("priorDayLimit should be 0 or greater. Setting to 0.");
+    }
+
+    if (this.config.entryLimit < 0) {
+      this.config.entryLimit = 0;
+      Log.warn("entryLimit should be 0 or greater. Setting to 0.");
     }
 
     if (this.config.priorEntryLimit < 0) {
