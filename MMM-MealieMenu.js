@@ -15,16 +15,18 @@ Module.register("MMM-MealieMenu", {
     password: "",                      // The password for your for Mealie account.
     groupId: "",                       // Group ID of the meal plan.
 
-    // Look and Feel
+    // Meal entries
     weekStartsOnMonday: false,         // Show Monday as the first day of the week.
     priorDayLimit: 7,                  // How many previous days of the current week will be displayed.
     priorEntryLimit: 50,               // How many entries from previous days should be shown in total.
+
+    // Look and Feel
     fadePriorEntries: true,            // Fade previous days in the current week.
     showPictures: true,                // Show pictures corresponding to that days meal.
     roundPictureCorners: false,        // Round the meal picture corners.
     defaultPicture: "mealie.png",      // Default image to display for missing recipe images or meal notes.
     showDescription: false,            // Show the recipe/meal description.
-    dateFormat: "dddd",                // Display format for the date; uses moment.js format string
+    dateFormat: "dddd",                // Display format for the date; uses moment.js format string.
     dateMealSeperator: " - ",          // Set the separator between the date and meal type.
     mealSortOrder: ["breakfast", "lunch", "dinner", "side"], // An array determining the order and visibility of the meal type headers.
     mealTypeName: {},                  // An object defining strings which will replacethe meal type header names.
@@ -32,8 +34,8 @@ Module.register("MMM-MealieMenu", {
     animationSpeed: 500,               // Speed of the update animation in milliseconds.
 
     // Display last update time
-    displayLastUpdate: false,          // Add line after the tasks with the last server update time
-    displayLastUpdateFormat: "MMM D - h:mm:ss a" // Format to display the last update; uses moment.js format string
+    displayLastUpdate: false,          // Add line after the meals with the last server update time.
+    displayLastUpdateFormat: "MMM D - h:mm:ss a" // Format to display the last update; uses moment.js format string.
   },
 
   /**
