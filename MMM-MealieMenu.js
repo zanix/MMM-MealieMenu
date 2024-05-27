@@ -28,7 +28,7 @@ Module.register("MMM-MealieMenu", {
     dateMealSeperator: " - ",          // Set the separator between the date and meal type.
     mealSortOrder: ["breakfast", "lunch", "dinner", "side"], // An array determining the order and visibility of the meal type headers.
     mealTypeName: {},                  // An object defining strings which will replacethe meal type header names.
-    updateInterval: 60,                // How often should the data be updated in seconds.
+    updateInterval: 60 * 60,           // How often should the data be updated in seconds.
     animationSpeed: 500,               // Speed of the update animation in milliseconds.
 
     // Display last update time
