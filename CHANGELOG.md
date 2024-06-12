@@ -1,3 +1,15 @@
+# [1.6.0](https://github.com/zanix/MMM-MealieMenu/compare/v1.5.0...v1.6.0) (2024-06-12)
+
+
+### Bug Fixes
+
+* show last update when enabled ([2832336](https://github.com/zanix/MMM-MealieMenu/commit/2832336ff9d131ec190924be8e2ca719d1099534))
+
+
+### Features
+
+* add token refresh when it expires ([49762ec](https://github.com/zanix/MMM-MealieMenu/commit/49762ec058789a05afe83d0dd4a18c0efcf582e8))
+
 # [1.5.0](https://github.com/zanix/MMM-MealieMenu/compare/v1.4.0...v1.5.0) (2024-05-27)
 
 
