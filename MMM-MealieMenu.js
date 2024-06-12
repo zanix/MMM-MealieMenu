@@ -320,8 +320,10 @@ Module.register("MMM-MealieMenu", {
       // days is the number of days between today and this menu items date; a negative value for past items.
       const days = moment(meal.rawDate).diff(today, "days");
 
-      // If days >= 0, this is a future entry. The config may limit how many of these we show.
-      // Add it to our result set if it is after today and this.config.entryLimit is not reached.
+      /**
+       * If days >= 0, this is a future entry. Add it to our result set if it is after today
+       * and this.config.entryLimit is not reached.
+       */
       if (days >= 0 && this.config.entryLimit >= entriesAfterTodayCount) {
         entriesAfterTodayCount += 1;
         filtered.push(meal);
@@ -339,8 +341,10 @@ Module.register("MMM-MealieMenu", {
       // days is the number of days between today and this menu items date; a negative value for past items.
       const days = moment(meal.rawDate).diff(today, "days");
 
-      // If days < 0, this is a previous entry. The config may limit how many of these we show.
-      // Add it to our result set if it is before today and this.config.priorEntryLimit is not reached.
+      /**
+       * If days < 0, this is a previous entry. Add it to our result set if it is before today
+       * and this.config.priorEntryLimit is not reached.
+       */
       if (days < 0 && this.config.priorEntryLimit >= entriesBeforeTodayCount) {
         entriesBeforeTodayCount += 1;
         filtered.push(meal);
