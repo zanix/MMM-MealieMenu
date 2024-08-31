@@ -254,7 +254,8 @@ Module.register("MMM-MealieMenu", {
       weekStartsOnMonday: this.config.weekStartsOnMonday,
       currentWeek: this.config.currentWeek,
       dayLimit: this.config.dayLimit,
-      priorDayLimit: this.config.priorDayLimit
+      priorDayLimit: this.config.priorDayLimit,
+      mealSortOrder: this.config.mealSortOrder
     });
   },
 
@@ -264,9 +265,6 @@ Module.register("MMM-MealieMenu", {
   formatMeals (meals) {
     const today = moment().startOf("day");
     const {mealSortOrder} = this.config;
-
-    // Filter meal types not in mealSortOrder.
-    meals.filter((meal) => mealSortOrder.includes(meal.entryType));
 
     // Sort by date ascending, then by meal type order (can be user defined).
     // eslint-disable-next-line id-length
