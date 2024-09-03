@@ -1,3 +1,10 @@
+## [1.6.1](https://github.com/zanix/MMM-MealieMenu/compare/v1.6.0...v1.6.1) (2024-09-03)
+
+
+### Bug Fixes
+
+* mealSortOrder actually filters entry types ([62a247b](https://github.com/zanix/MMM-MealieMenu/commit/62a247ba34ba2bb721fcc5c714853ad81d06aa56)), closes [#66](https://github.com/zanix/MMM-MealieMenu/issues/66)
+
 # [1.6.0](https://github.com/zanix/MMM-MealieMenu/compare/v1.5.0...v1.6.0) (2024-06-12)
 
 
