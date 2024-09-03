@@ -29,7 +29,7 @@ const config = [
       "max-lines-per-function": ["error", 120],
       "max-lines": "off",
       "max-params": "off",
-      "max-statements": ["error", 30],
+      "max-statements": ["error", 40],
       "multiline-comment-style": "off",
       "no-await-in-loop": "off",
       "no-inline-comments": "off",

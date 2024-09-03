@@ -144,7 +144,15 @@ module.exports = NodeHelper.create({
     if (payload.groupId) {
       params.append("group_id", payload.groupId);
     }
+    if (payload.mealSortOrder && payload.mealSortOrder.length > 0) {
+      const mealSortOrder = payload.mealSortOrder.join("\", \"");
+      const entryType = `entryType in ["${mealSortOrder}"]`;
+      params.append("queryFilter", entryType);
+    }
+
     url.search = params.toString();
+
+    Log.debug(`[${this.name}] API Mealplan query: ${url.search}`);
 
     // Get the full list of meals from Mealie.
     fetch(url, {
