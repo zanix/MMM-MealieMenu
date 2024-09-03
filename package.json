@@ -37,7 +37,7 @@
     "lint-staged": "^15.2.9",
     "markdownlint-cli": "^0.41.0",
     "prettier": "^3.2.5",
-    "semantic-release": "^23.0.8",
+    "semantic-release": "^24.1.0",
     "stylelint": "^16.6.1",
     "stylelint-config-standard": "^36.0.0",
     "stylelint-prettier": "^5.0.0"
