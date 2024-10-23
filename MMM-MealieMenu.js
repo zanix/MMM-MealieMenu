@@ -13,6 +13,7 @@ Module.register("MMM-MealieMenu", {
     apiKey: "",                        // An API key generated from a user profile in Mealie.
     username: "",                      // The username/email for your Mealie account.
     password: "",                      // The password for your for Mealie account.
+    householdId: "",                   // Household ID of the meal plan.
     groupId: "",                       // Group ID of the meal plan.
 
     // Meal entries
@@ -250,6 +251,7 @@ Module.register("MMM-MealieMenu", {
       apiKey: this.config.apiKey,
       username: this.config.username,
       password: this.config.password,
+      householdId: this.config.householdId,
       groupId: this.config.groupId,
       weekStartsOnMonday: this.config.weekStartsOnMonday,
       currentWeek: this.config.currentWeek,

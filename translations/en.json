@@ -5,6 +5,7 @@
   "ERROR_NO_USER": "You have not provided a username! Username is required when not using the apiKey.<br>Please set 'username' in config.js!",
   "ERROR_NO_PASS": "You have not provided a password! Password is required when not using the apiKey.<br>Please set 'username' in config.js!",
   "ERROR_MEAL_SORT_ORDER": "mealSortOrder should be an array of strings continaing: ['breakfast', 'lunch', 'dinner', 'side']. They should appear exactly once in the desired sort order.",
+  "INIT_ERROR": "Initialization Error: There was an error setting up Mealie.",
   "AUTH_ERROR": "Authentication Error: There was an error fetching a user token. Check your username and password.",
   "FETCH_ERROR": "Fetch Error: There was an error fetching data from Mealie.",
   "MEALIE_SUSPEND": "Function suspend - module: {name} with identifier: {identifier}",
