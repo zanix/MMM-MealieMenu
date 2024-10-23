@@ -25,7 +25,7 @@ module.exports = NodeHelper.create({
               this.initComplete(payload);
             })
             .catch((error) => {
-              Log.error(`[${this.name}] Auth error:`, JSON.stringify(error));
+              Log.error(`[${this.name}] Auth error:`, JSON.stringify(error.toString()));
 
               this.sendSocketNotification("MEALIE_ERROR", {
                 error: "AUTH_ERROR",
@@ -96,7 +96,7 @@ module.exports = NodeHelper.create({
           this.getMeals(payload);
         })
         .catch((error) => {
-          Log.error(`[${this.name}] Auth error:`, JSON.stringify(error));
+          Log.error(`[${this.name}] Auth error:`, JSON.stringify(error.toString()));
 
           this.sendSocketNotification("MEALIE_ERROR", {
             error: "AUTH_ERROR",
@@ -180,7 +180,7 @@ module.exports = NodeHelper.create({
       })
       .catch((error) => {
         this.outstandingRequest = false;
-        Log.error(`[${this.name}] Fetch error:`, JSON.stringify(error));
+        Log.error(`[${this.name}] Fetch error:`, JSON.stringify(error.toString()));
 
         this.sendSocketNotification("MEALIE_ERROR", {
           error: "FETCH_ERROR",
