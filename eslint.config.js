@@ -26,7 +26,7 @@ const config = [
       "func-style": "off",
       "init-declarations": "off",
       "line-comment-position": "off",
-      "max-lines-per-function": ["error", 120],
+      "max-lines-per-function": ["off"],
       "max-lines": "off",
       "max-params": "off",
       "max-statements": ["error", 40],

@@ -10,30 +10,13 @@ module.exports = NodeHelper.create({
     this.token = null;
     this.tokenExpiration = null;
     this.outstandingRequest = false;
+    this.ApiVersion = "1.0.0";
   },
 
   socketNotificationReceived (notification, payload) {
     switch (notification) {
       case "MEALIE_INIT":
-        // Use API Key or fetch a token.
-        if (payload.apiKey) {
-          this.token = payload.apiKey;
-          this.initComplete(payload);
-        } else {
-          this.getToken(payload)
-            .then(() => {
-              this.initComplete(payload);
-            })
-            .catch((error) => {
-              Log.error(`[${this.name}] Auth error:`, JSON.stringify(error.toString()));
-
-              this.sendSocketNotification("MEALIE_ERROR", {
-                error: "AUTH_ERROR",
-                details: error,
-                identifier: payload.identifier
-              });
-            });
-        }
+        this.initApi(payload);
         break;
 
       case "MEALIE_MENU_GET":
@@ -42,10 +25,58 @@ module.exports = NodeHelper.create({
     }
   },
 
+  async initApi (payload) {
+    try {
+      // Get API version
+      await this.getApiVersion(payload);
+
+      // Use API key or fetch token
+      if (payload.apiKey) {
+        this.token = payload.apiKey;
+      } else {
+        await this.getToken(payload);
+      }
+
+      this.initComplete(payload, this.token);
+    } catch (error) {
+      Log.error(`[${this.name}] Initialization error:`, JSON.stringify(error.toString()));
+
+      this.sendSocketNotification("MEALIE_ERROR", {
+        error: "INIT_ERROR",
+        details: error,
+        identifier: payload.identifier
+      });
+    }
+  },
+
   initComplete (payload) {
     this.sendSocketNotification("MEALIE_INITIALIZED", {
       identifier: payload.identifier
     });
+  },
+
+  getApiVersion (payload) {
+    const url = new URL(`${payload.host}/api/app/about`);
+
+    return fetch(url, {
+      method: "GET",
+      headers: {
+        Accept: "application/json"
+      }
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response;
+        }
+        throw response.statusText;
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        this.ApiVersion = data.version;
+      })
+      .catch((error) => {
+        throw error;
+      });
   },
 
   getToken (payload) {
@@ -134,16 +165,25 @@ module.exports = NodeHelper.create({
 
     Log.info(`[${this.name}] Fetching meals: Start Date ${startDate.format("YYYY-MM-DD")} - End date ${endDate.format("YYYY-MM-DD")}`);
 
-    const url = new URL(`${payload.host}/api/groups/mealplans`);
+    let url = new URL(`${payload.host}/api/groups/mealplans`);
+    // Check for new API endpoint.
+    if (this.versionCheck(this.ApiVersion, "2.0.0")) {
+      url = new URL(`${payload.host}/api/households/mealplans`);
+    }
 
     const params = new URLSearchParams();
     params.append("start_date", startDate.format("YYYY-MM-DD"));
     params.append("end_date", endDate.format("YYYY-MM-DD"));
     params.append("orderBy", "date");
     params.append("orderDirection", "asc");
+
+    if (payload.householdId) {
+      params.append("household_id", payload.householdId);
+    }
     if (payload.groupId) {
       params.append("group_id", payload.groupId);
     }
+
     if (payload.mealSortOrder && payload.mealSortOrder.length > 0) {
       const mealSortOrder = payload.mealSortOrder.join("\", \"");
       const entryType = `entryType in ["${mealSortOrder}"]`;
@@ -191,6 +231,28 @@ module.exports = NodeHelper.create({
       .finally(() => {
         this.outstandingRequest = false;
       });
+  },
+
+  versionCheck (version, required) {
+    const minParts = required
+      .replace(/[^0-9.]/ug, "")
+      .trim()
+      .split(".");
+    const newParts = version
+      .replace(/[^0-9.]/ug, "")
+      .trim()
+      .split(".");
+    for (let part = 0; part < newParts.length; part += 1) {
+      const verA = parseInt(newParts[part], 10);
+      const verB = parseInt(minParts[part], 10);
+      if (verA > verB) {
+        return true;
+      }
+      if (verA < verB) {
+        return false;
+      }
+    }
+    return true;
   },
 
   getFirstDayOfWeek (weekStartsOnMonday) {
