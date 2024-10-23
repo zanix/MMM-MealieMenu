@@ -1,3 +1,15 @@
+# [1.7.0](https://github.com/zanix/MMM-MealieMenu/compare/v1.6.1...v1.7.0) (2024-10-23)
+
+
+### Bug Fixes
+
+* error log output ([0a64fa2](https://github.com/zanix/MMM-MealieMenu/commit/0a64fa200d90610e5765f6435956b678d8f169df))
+
+
+### Features
+
+* add support for mealie v2 (households) ([fed93f7](https://github.com/zanix/MMM-MealieMenu/commit/fed93f78e079fa94c97b7317ab97d828db2f386e)), closes [#69](https://github.com/zanix/MMM-MealieMenu/issues/69)
+
 ## [1.6.1](https://github.com/zanix/MMM-MealieMenu/compare/v1.6.0...v1.6.1) (2024-09-03)
 
 
