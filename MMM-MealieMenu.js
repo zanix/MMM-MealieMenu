@@ -429,6 +429,7 @@ Module.register("MMM-MealieMenu", {
       // eslint-disable-next-line no-new
       new URL(url);
       return true;
+      // eslint-disable-next-line no-unused-vars
     } catch (err) {
       return false;
     }

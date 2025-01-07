@@ -19,18 +19,30 @@ jobs:
       id-token: write
 
     steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+
       - name: 📥 Check out repository
         uses: actions/checkout@v4
+
+      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
+
       - name: 📜 Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "lts/*"
+          node-version: lts/*
+
       - name: 🔗 Install dependencies
         run: npx ci
+
       - name: 🧩 Install semantic-release extra plugins
         run: npm install --save-dev @semantic-release/changelog @semantic-release/git
+
       - name: 🧹 Lint
         run: npm run lint:fix
+
       - name: ✅ Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -257,6 +257,7 @@ module.exports = NodeHelper.create({
 
   getFirstDayOfWeek (weekStartsOnMonday) {
     const today = moment();
+    // eslint-disable-next-line no-useless-assignment
     let firstDayOfWeek = moment();
 
     // moment.isoWeekday() returns 1 for Monday, 7 for Sunday.
