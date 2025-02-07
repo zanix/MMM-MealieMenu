@@ -1,10 +1,11 @@
-{
+const config = {
   "extends": ["stylelint-config-standard"],
   "plugins": ["stylelint-prettier"],
   "root": true,
-  "configBasedir": "./",
   "rules": {
     "prettier/prettier": true,
-    "selector-class-pattern": ""
+    "selector-class-pattern": null
   }
-}
+};
+
+export default config;

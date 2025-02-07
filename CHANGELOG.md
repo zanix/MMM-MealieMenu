@@ -75,7 +75,7 @@
 
 - Add GroupId, remove Axios, validate host, fix error font size ([dac235c](https://github.com/zanix/MMM-MealieMenu/commit/dac235c0d7ae6dd54d6f9dc456b06f2db55fd2f6))
 
-# [1.0.0] (2024-03-06)
+# 1.0.0 (2024-03-06)
 
 ### Features
 
