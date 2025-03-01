@@ -46,7 +46,7 @@
     "@stylistic/eslint-plugin": "^2.12.1",
     "eslint": "^9.20.0",
     "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-package-json": "^0.19.0",
+    "eslint-plugin-package-json": "^0.26.0",
     "globals": "^15.14.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.3.0",
