@@ -1,15 +1,15 @@
-import eslintPluginImport from "eslint-plugin-import";
 import eslintPluginJs from "@eslint/js";
 import eslintPluginJson from "@eslint/json";
 import eslintPluginMarkdown from "@eslint/markdown";
-import eslintPluginPackageJson from "eslint-plugin-package-json/configs/recommended";
+import eslintPluginPackageJson from "eslint-plugin-package-json";
 import eslintPluginStylistic from "@stylistic/eslint-plugin";
 import globals from "globals";
+import {flatConfigs as importConfigs} from "eslint-plugin-import-x";
 
 const config = [
-  eslintPluginImport.flatConfigs.recommended,
   eslintPluginJs.configs.all,
-  eslintPluginPackageJson,
+  eslintPluginPackageJson.configs.recommended,
+  importConfigs.recommended,
   ...eslintPluginMarkdown.configs.recommended,
   {
     "files": ["CHANGELOG.md"],
@@ -64,10 +64,10 @@ const config = [
       "sourceType": "commonjs"
     },
     "plugins": {
-      ...eslintPluginStylistic.configs["all-flat"].plugins
+      ...eslintPluginStylistic.configs.all.plugins
     },
     "rules": {
-      ...eslintPluginStylistic.configs["all-flat"].rules,
+      ...eslintPluginStylistic.configs.all.rules,
       "@stylistic/array-element-newline": ["error", "consistent"],
       "@stylistic/dot-location": ["error", "property"],
       "@stylistic/function-call-argument-newline": ["error", "consistent"],
@@ -95,6 +95,7 @@ const config = [
       "no-ternary": "off",
       "no-undef": "warn",
       "one-var": "off",
+      "prefer-destructuring": "off",
       "sort-keys": "off",
       "strict": "off"
     }
@@ -109,17 +110,20 @@ const config = [
       "sourceType": "module"
     },
     "plugins": {
-      ...eslintPluginStylistic.configs["all-flat"].plugins
+      ...eslintPluginStylistic.configs.all.plugins
     },
     "rules": {
-      ...eslintPluginStylistic.configs["all-flat"].rules,
-      "@stylistic/array-element-newline": "off",
+      ...eslintPluginStylistic.configs.all.rules,
+      "@stylistic/array-element-newline": ["error", "consistent"],
       "@stylistic/indent": ["error", 2],
       "@stylistic/padded-blocks": ["error", "never"],
       "func-style": "off",
-      "import/no-unresolved": "off",
+      "import-x/no-unresolved": "off",
+      "init-declarations": "off",
       "max-lines-per-function": ["error", 100],
+      "max-statements": ["error", 25],
       "no-magic-numbers": "off",
+      "no-ternary": "off",
       "one-var": "off",
       "prefer-destructuring": "off"
     }
