@@ -25,14 +25,14 @@
   ],
   "main": "MMM-MealieMenu.js",
   "scripts": {
-    "lint": "eslint && stylelint **/*.css && markdownlint . --ignore node_modules && prettier . --check",
-    "lint:fix": "eslint --fix && stylelint **/*.css --fix && markdownlint . --ignore node_modules --fix && prettier . --write",
+    "lint": "eslint --ignore-pattern 'CHANGELOG.md' && stylelint **/*.css && markdownlint . --ignore node_modules && prettier . --check",
+    "lint:fix": "eslint --ignore-pattern 'CHANGELOG.md' --fix && stylelint **/*.css --fix && markdownlint . --ignore node_modules --fix && prettier . --write",
     "prepare": "[ -f node_modules/.bin/husky ] && husky || echo husky is not installed.",
     "test": "npm run lint"
   },
   "lint-staged": {
     "!(*.css|*.md)": [
-      "eslint --fix",
+      "eslint --ignore-pattern 'CHANGELOG.md' --fix",
       "prettier --write --ignore-unknown"
     ],
     "*.md": [
