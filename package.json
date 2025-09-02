@@ -52,7 +52,7 @@
     "@eslint/markdown": "^6.6.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
-    "@stylistic/eslint-plugin": "^4.2.0",
+    "@stylistic/eslint-plugin": "^5.3.1",
     "eslint": "^9.24.0",
     "eslint-plugin-import-x": "^4.16.1",
     "eslint-plugin-package-json": "^0.29.1",
