@@ -1,14 +1,17 @@
 import eslintPluginJs from "@eslint/js";
 import eslintPluginJson from "@eslint/json";
 import eslintPluginMarkdown from "@eslint/markdown";
-import eslintPluginPackageJson from "eslint-plugin-package-json";
+import {configs as eslintPluginPackageJsonConfigs} from "eslint-plugin-package-json";
 import eslintPluginStylistic from "@stylistic/eslint-plugin";
 import globals from "globals";
 import {flatConfigs as importConfigs} from "eslint-plugin-import-x";
 
 const config = [
+  {
+    "ignores": ["CHANGELOG.md", ".commitlintrc.json"]
+  },
   eslintPluginJs.configs.all,
-  eslintPluginPackageJson.configs.recommended,
+  eslintPluginPackageJsonConfigs.recommended,
   importConfigs.recommended,
   ...eslintPluginMarkdown.configs.recommended,
   {
@@ -21,7 +24,7 @@ const config = [
     "files": ["**/*.md"],
     "language": "markdown/gfm",
     "plugins": {
-      eslintPluginMarkdown
+      "markdown": eslintPluginMarkdown
     },
     "rules": {
       "logical-assignment-operators": "off",
@@ -85,7 +88,7 @@ const config = [
       "init-declarations": "off",
       "line-comment-position": "off",
       "max-lines": "off",
-      "max-lines-per-function": ["off"],
+      "max-lines-per-function": "off",
       "max-params": "off",
       "max-statements": ["error", 40],
       "multiline-comment-style": "off",
