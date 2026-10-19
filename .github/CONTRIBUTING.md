@@ -8,13 +8,19 @@ We hold our code to a a set of standards, and these standards are documented bel
 
 Run `npm install` since the normal installation instructions do not install the development packages.
 
+## Developer Commands
+
+- `npm install` - Install all dependencies including development dependencies
+- `npm run lint` - Run linting and formatter checks
+- `npm run lint:fix` - Fix linting and formatter issues
+- `npm run release` - Create a new release (Bumps version, creates changelog, commits, tags)
+- `npm run test` - Run linting and formatter checks
+
 ## Linters
 
-Several linters are used for automatic linting of files.
+[Prettier](https://prettier.io) used for automatic linting of files which has ESLint bundled for CSS, JS, and Markdown files.
 
-- [ESLint](https://eslint.org) for JavaScript files. Configuration is in `.stylelintrc`.
-- [StyleLint](https://stylelint.io) for CSS. Configuration is in `.stylelintrc.json`.
-- [Prettier](https://prettier.io) for the rest of the files. Configuration is in `prettier.config.js` and `.prettierignore`.
+Configuration for Prettier is in `prettier.config.mjs` and `.prettierignore`. ESlint configuration is in `eslint.config.mjs`.
 
 To run automatic linting, use `npm run lint:fix`.
 
