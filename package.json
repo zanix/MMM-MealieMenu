@@ -21,55 +21,50 @@
     "url": "https://github.com/zanix"
   },
   "contributors": [
-    "https://github.com/zanix/MMM-MealieMenu/graphs/contributors"
+    {
+      "name": "Contributers to zanix/MMM-MealieMenu",
+      "url": "https://github.com/zanix/MMM-MealieMenu/graphs/contributors"
+    }
   ],
   "main": "MMM-MealieMenu.js",
+  "type": "commonjs",
   "scripts": {
-    "lint": "eslint && stylelint **/*.css && markdownlint . --ignore node_modules && prettier . --check",
-    "lint:fix": "eslint --fix && stylelint **/*.css --fix && markdownlint . --ignore node_modules --fix && prettier . --write",
-    "markdownlint": "markdownlint . --ignore node_modules",
-    "prepare": "[ -f node_modules/.bin/husky ] && husky || echo husky is not installed.",
-    "prettier": "prettier . --check",
-    "prettier:fix": "prettier . --write",
-    "test": "npm run lint"
+    "check-updates": "npx npm-check-updates",
+    "lint": "eslint && prettier . --check",
+    "lint:fix": "eslint --fix && prettier . --write",
+    "prepare": "simple-git-hooks || true",
+    "release": "commit-and-tag-version --config ./changelog.config.js",
+    "test": "node --test"
+  },
+  "allowScripts": {
+    "simple-git-hooks@2.14.0": true,
+    "unrs-resolver@1.12.2": true
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npx lint-staged"
   },
   "lint-staged": {
-    "!(*.css|*.md)": [
+    "*": [
       "eslint --fix",
       "prettier --write --ignore-unknown"
-    ],
-    "*.md": [
-      "markdownlint --ignore node_modules --fix",
-      "prettier --write"
-    ],
-    "*.css": [
-      "stylelint --fix",
-      "prettier --write"
     ]
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.3.0",
-    "@commitlint/config-conventional": "^19.8.0",
-    "@eslint/js": "^9.24.0",
-    "@eslint/json": "^0.13.2",
-    "@eslint/markdown": "^7.2.0",
-    "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/git": "^10.0.1",
-    "@stylistic/eslint-plugin": "^5.3.1",
-    "eslint": "^9.24.0",
-    "eslint-plugin-import-x": "^4.16.1",
-    "eslint-plugin-package-json": "^0.29.1",
-    "globals": "^16.3.0",
-    "husky": "^9.1.7",
-    "lint-staged": "^16.2.3",
-    "markdownlint-cli": "^0.44.0",
-    "prettier": "^3.6.2",
-    "semantic-release": "^24.2.7",
-    "stylelint": "^16.24.0",
-    "stylelint-config-standard": "^39.0.0",
-    "stylelint-prettier": "^5.0.3"
+    "@eslint/css": "^2.0.1",
+    "@eslint/js": "^10.0.1",
+    "@eslint/json": "^2.1.1",
+    "@eslint/markdown": "^8.0.3",
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "commit-and-tag-version": "^13.3.0",
+    "eslint": "^10.13.0",
+    "eslint-plugin-import-x": "^4.17.1",
+    "eslint-plugin-package-json": "^1.10.1",
+    "globals": "^17.13.0",
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.9.10",
+    "simple-git-hooks": "^2.14.0"
   },
   "engines": {
-    "node": ">=22.14.0"
+    "node": ">=22"
   }
 }
