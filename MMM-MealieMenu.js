@@ -45,7 +45,6 @@ Module.register("MMM-MealieMenu", {
   /**
    * Core method, called when all modules are loaded and the system is ready to boot up.
    */
-  // eslint-disable-next-line max-statements
   start () {
     Log.info(`Starting module: ${this.name} with identifier: ${this.identifier}`);
 
@@ -54,50 +53,31 @@ Module.register("MMM-MealieMenu", {
     this.lastUpdate = 0; // Timestamp of the last module update. Set to 0 at start-up
 
     this.initialized = false;
+    this.loaded = false;
     this.error = null;
     this.formattedMenuData = null;
     this.dataRefreshTimestamp = null;
     this.dataRefreshDisplayTime = null;
 
-    // Validate host.
-    if (!this.config.host || !this.isValidURL(this.config.host)) {
-      Log.error(this.translate("ERROR_INVALID", {value: "host"}));
-      this.error = this.translate("ERROR_NO_HOST");
+    const {config, warnings, errors} = window.MealieMenuConfig.validate(this.config, this.defaults);
 
+    // Reload config with validated values so getTemplateData() can use them.
+    this.config = config;
+
+    // Log warnings to the console, but continue running with valid config values.
+    warnings.forEach((warning) => Log.warn(`${this.name}: ${warning}`));
+
+    // Log errors to the console and stop the module from running.
+    if (errors.length > 0) {
+      errors.forEach((error) => Log.error(`${this.name}: ${error.message}`));
+      this.error = errors[0].code;
       return;
     }
 
-    // Validate API key or username/password.
-    if (!this.config.apiKey) {
-      Log.info(this.translate("ERROR_INVALID", {value: "apiKey"}));
-      Log.info(this.translate("INFO_NO_APIKEY"));
-
-      if (!this.config.username) {
-        Log.error(this.translate("ERROR_INVALID", {value: "username"}));
-        this.error = this.translate("ERROR_NO_USER");
-
-        return;
-      } else if (!this.config.password) {
-        Log.error(this.translate("ERROR_INVALID", {value: "password"}));
-        this.error = this.translate("ERROR_NO_PASS");
-
-        return;
-      }
+    // Check for an external default image.
+    if (!this.config.defaultPicture.startsWith("http") && !this.config.defaultPicture.includes("/")) {
+      this.config.defaultPicture = this.file(this.config.defaultPicture);
     }
-
-    // Validate mealSortOrder.
-    if (!(
-      Array.isArray(this.config.mealSortOrder) &&
-      this.config.mealSortOrder.length > 0 &&
-      this.config.mealSortOrder.every((value) => this.defaults.mealSortOrder.includes(value))
-    )) {
-      Log.error(this.translate("ERROR_INVALID", {value: "mealSortOrder"}));
-      this.error = this.translate("ERROR_MEAL_SORT_ORDER");
-
-      return;
-    }
-
-    this.sanitzeConfig();
 
     this.sendSocketNotification("MEALIE_INIT", {
       identifier: this.identifier,
@@ -112,7 +92,7 @@ Module.register("MMM-MealieMenu", {
    * Core method, called to request any additional scripts that need to be loaded.
    */
   getScripts () {
-    return ["moment.js"];
+    return [this.file("lib/config.js")];
   },
 
   /**
@@ -135,7 +115,7 @@ Module.register("MMM-MealieMenu", {
    * Core method, called to request the template file.
    */
   getTemplate () {
-    return "MMM-MealieMenu.njk";
+    return "templates/default.njk";
   },
 
   /**
@@ -143,14 +123,12 @@ Module.register("MMM-MealieMenu", {
    */
   getTemplateData () {
     return {
-      phrases: {
-        loading: this.translate("LOADING"),
-        emptyMealPlan: this.translate("MEALIE_EMPTY_MEALPLAN")
-      },
-      hasError: Boolean(this.error),
-      error: this.error,
-      loading: this.formattedMenuData === null,
       config: this.config,
+      error: this.error,
+      errorText: this.error
+        ? this.translate(`ERROR_${this.error}`)
+        : "",
+      loaded: this.loaded,
       menu: this.formattedMenuData,
       identifier: this.identifier,
       timestamp: this.dataRefreshTimestamp,
@@ -177,15 +155,17 @@ Module.register("MMM-MealieMenu", {
           this.dataRefreshDisplayTime = now.format(this.config.displayLastUpdateFormat);
 
           this.formattedMenuData = {meals: this.formatMeals(payload.meals)};
-
-          // Log.info(this.formattedMenuData);
+          Log.debug(this.formattedMenuData);
           this.error = null;
+          this.loaded = true;
+
           this.updateDom(this.config.animationSpeed);
 
           break;
 
         case "MEALIE_ERROR":
-          this.error = this.translate(payload.error);
+          this.error = payload.code;
+          this.loaded = true;
           this.formattedMenuData = null;
           this.updateDom(this.config.animationSpeed);
 
@@ -379,60 +359,5 @@ Module.register("MMM-MealieMenu", {
     }
 
     return value;
-  },
-
-  /**
-   * Assert values for configuration.
-   */
-  sanitzeConfig () {
-    // Strip trailing slashes.
-    this.config.host = this.config.host.replace(/\/$/u, "");
-
-    // Check for an external default image.
-    if (
-      !this.config.defaultPicture.startsWith("http") &&
-      !this.config.defaultPicture.includes("/")
-    ) {
-      this.config.defaultPicture = this.file(this.config.defaultPicture);
-    }
-
-    if (this.config.dayLimit < 0) {
-      this.config.dayLimit = 0;
-      Log.warn("dayLimit should be 0 or greater. Setting to 0.");
-    }
-
-    if (this.config.priorDayLimit < 0) {
-      this.config.priorDayLimit = 0;
-      Log.warn("priorDayLimit should be 0 or greater. Setting to 0.");
-    }
-
-    if (this.config.entryLimit < 0) {
-      this.config.entryLimit = 0;
-      Log.warn("entryLimit should be 0 or greater. Setting to 0.");
-    }
-
-    if (this.config.priorEntryLimit < 0) {
-      this.config.priorEntryLimit = 0;
-      Log.warn("priorEntryLimit should be 0 or greater. Setting to 0.");
-    }
-
-    if (this.config.updateInterval < 1) {
-      this.config.updateInterval = 1;
-      Log.warn("updateInterval should be 1 or greater. Setting to 1.");
-    }
-  },
-
-  /**
-   * Assert valid URL.
-   */
-  isValidURL (url) {
-    try {
-      // eslint-disable-next-line no-new
-      new URL(url);
-      return true;
-      // eslint-disable-next-line no-unused-vars
-    } catch (err) {
-      return false;
-    }
   }
 });

@@ -1,3 +1,5 @@
+"use strict";
+
 const NodeHelper = require("node_helper");
 const Log = require("logger");
 const moment = require("moment");
@@ -37,22 +39,18 @@ module.exports = NodeHelper.create({
         await this.getToken(payload);
       }
 
-      this.initComplete(payload, this.token);
+      this.sendSocketNotification("MEALIE_INITIALIZED", {
+        identifier: payload.identifier
+      });
     } catch (error) {
       Log.error(`[${this.name}] Initialization error:`, JSON.stringify(error.toString()));
 
       this.sendSocketNotification("MEALIE_ERROR", {
-        error: "INIT_ERROR",
+        code: "INIT",
         details: error,
         identifier: payload.identifier
       });
     }
-  },
-
-  initComplete (payload) {
-    this.sendSocketNotification("MEALIE_INITIALIZED", {
-      identifier: payload.identifier
-    });
   },
 
   getApiVersion (payload) {
@@ -131,7 +129,7 @@ module.exports = NodeHelper.create({
           Log.error(`[${this.name}] Auth error:`, JSON.stringify(error.toString()));
 
           this.sendSocketNotification("MEALIE_ERROR", {
-            error: "AUTH_ERROR",
+            code: "AUTH",
             details: error,
             identifier: payload.identifier
           });
@@ -224,7 +222,7 @@ module.exports = NodeHelper.create({
         Log.error(`[${this.name}] Fetch error:`, JSON.stringify(error.toString()));
 
         this.sendSocketNotification("MEALIE_ERROR", {
-          error: "FETCH_ERROR",
+          code: "FETCH",
           details: error,
           identifier: payload.identifier
         });
