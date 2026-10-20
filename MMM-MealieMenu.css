@@ -54,11 +54,13 @@
 
 .MMM-MealieMenu .meal-header {
   grid-area: meal-header;
+  /* eslint-disable-next-line css/no-invalid-properties */
   font-size: var(--font-size-xsmall);
 }
 
 .MMM-MealieMenu .meal-name {
   grid-area: meal-name;
+  /* eslint-disable-next-line css/no-invalid-properties */
   font-size: var(--font-size-small);
   text-overflow: ellipsis;
   overflow: hidden;
@@ -67,6 +69,7 @@
 
 .MMM-MealieMenu .meal-description {
   grid-area: meal-description;
+  /* eslint-disable-next-line css/no-invalid-properties */
   font-size: var(--font-size-xsmall);
   text-overflow: ellipsis;
   overflow: hidden;
@@ -74,11 +77,13 @@
 }
 
 .MMM-MealieMenu .meal-item.today .meal-header {
+  /* eslint-disable-next-line css/no-invalid-properties */
   font-size: calc(var(--font-size-small) - 0.1rem);
 }
 
 .MMM-MealieMenu .meal-item.today .meal-name {
   color: #fff;
+  /* eslint-disable-next-line css/no-invalid-properties */
   font-size: calc(var(--font-size-medium) - 0.3rem);
 }
 

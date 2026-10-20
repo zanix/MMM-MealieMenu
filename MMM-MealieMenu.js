@@ -45,6 +45,7 @@ Module.register("MMM-MealieMenu", {
   /**
    * Core method, called when all modules are loaded and the system is ready to boot up.
    */
+  // eslint-disable-next-line max-statements
   start () {
     Log.info(`Starting module: ${this.name} with identifier: ${this.identifier}`);
 

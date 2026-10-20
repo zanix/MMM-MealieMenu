@@ -111,6 +111,7 @@ module.exports = NodeHelper.create({
       });
   },
 
+  // eslint-disable-next-line max-statements, max-lines-per-function
   getMeals (payload) {
     if (this.outstandingRequest === true) {
       Log.info(`[${this.name}] Outstanding request, not trying again.`);
@@ -257,8 +258,7 @@ module.exports = NodeHelper.create({
 
   getFirstDayOfWeek (weekStartsOnMonday) {
     const today = moment();
-    // eslint-disable-next-line no-useless-assignment
-    let firstDayOfWeek = moment();
+    let firstDayOfWeek;
 
     // moment.isoWeekday() returns 1 for Monday, 7 for Sunday.
     if (weekStartsOnMonday) {
