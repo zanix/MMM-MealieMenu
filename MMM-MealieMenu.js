@@ -79,13 +79,7 @@ Module.register("MMM-MealieMenu", {
       this.config.defaultPicture = this.file(this.config.defaultPicture);
     }
 
-    this.sendSocketNotification("MEALIE_INIT", {
-      identifier: this.identifier,
-      host: this.config.host,
-      apiKey: this.config.apiKey,
-      username: this.config.username,
-      password: this.config.password
-    });
+    this.sendSocketNotification("MEALIE_INIT", {identifier: this.identifier, config: this.config, defaults: this.defaults});
   },
 
   /**
@@ -155,7 +149,7 @@ Module.register("MMM-MealieMenu", {
           this.dataRefreshDisplayTime = now.format(this.config.displayLastUpdateFormat);
 
           this.formattedMenuData = {meals: this.formatMeals(payload.meals)};
-          Log.debug(this.formattedMenuData);
+          Log.debug("Meals formatted:", this.formattedMenuData);
           this.error = null;
           this.loaded = true;
 
@@ -164,6 +158,7 @@ Module.register("MMM-MealieMenu", {
           break;
 
         case "MEALIE_ERROR":
+          Log.warn(`${this.name}: Backend reported ${payload.code}`);
           this.error = payload.code;
           this.loaded = true;
           this.formattedMenuData = null;

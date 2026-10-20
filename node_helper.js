@@ -3,12 +3,13 @@
 const NodeHelper = require("node_helper");
 const Log = require("logger");
 const moment = require("moment");
+const {validate} = require("./lib/config");
 
 // Example result from mealplans API see example_data.json.
 
 module.exports = NodeHelper.create({
   start () {
-    Log.log(`Starting node_helper for module [${this.name}]`);
+    Log.log("node_helper started");
     this.token = null;
     this.tokenExpiration = null;
     this.outstandingRequest = false;
@@ -27,34 +28,53 @@ module.exports = NodeHelper.create({
     }
   },
 
-  async initApi (payload) {
+  /**
+   * Initializes the Mealie client with the given identifier and configuration.
+   * @param {*} param0.identifier The identifier for this instance.
+   * @param {*} param0.config The configuration object for this instance.
+   * @param {*} param0.defaults The default configuration for this instance.
+   * @returns Promise that resolves when the instance is initialized and connected, or rejects if there is an error.
+   */
+  async initApi ({identifier, config: rawConfig, defaults}) {
+    // Do not trust the configuration: validate and sanitize it here too.
+    const {config, warnings, errors} = validate(rawConfig, defaults);
+    warnings.forEach((warning) => Log.warn(`Config: ${warning}`));
+    if (errors.length) {
+      errors.forEach((error) => Log.error(`Config: ${error.message}`));
+      this.sendSocketNotification("MEALIE_ERROR", {identifier, code: errors[0].code});
+      return Promise.resolve();
+    }
+    Log.info(`Initializing instance ${identifier} for ${config.serverUrl} (auth: ${config.apiKey
+      ? "apiKey"
+      : "user/password"})`);
+
     try {
       // Get API version
-      await this.getApiVersion(payload);
+      await this.getApiVersion(config);
 
       // Use API key or fetch token
-      if (payload.apiKey) {
-        this.token = payload.apiKey;
+      if (config.apiKey) {
+        this.token = config.apiKey;
       } else {
-        await this.getToken(payload);
+        await this.getToken(config);
       }
 
-      this.sendSocketNotification("MEALIE_INITIALIZED", {
-        identifier: payload.identifier
-      });
+      this.sendSocketNotification("MEALIE_INITIALIZED", {identifier});
     } catch (error) {
       Log.error(`[${this.name}] Initialization error:`, JSON.stringify(error.toString()));
 
       this.sendSocketNotification("MEALIE_ERROR", {
         code: "INIT",
         details: error,
-        identifier: payload.identifier
+        identifier
       });
     }
+
+    return Promise.resolve();
   },
 
-  getApiVersion (payload) {
-    const url = new URL(`${payload.host}/api/app/about`);
+  getApiVersion (config) {
+    const url = new URL(`${config.host}/api/app/about`);
 
     return fetch(url, {
       method: "GET",
@@ -77,11 +97,11 @@ module.exports = NodeHelper.create({
       });
   },
 
-  getToken (payload) {
-    const url = new URL(`${payload.host}/api/auth/token`);
+  getToken (config) {
+    const url = new URL(`${config.host}/api/auth/token`);
     const params = new URLSearchParams();
-    params.append("username", payload.username);
-    params.append("password", payload.password);
+    params.append("username", config.username);
+    params.append("password", config.password);
 
     return fetch(url, {
       method: "POST",
