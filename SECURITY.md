@@ -14,7 +14,8 @@ these steps:
 
 1. Use the GitHub security reporting button to report the vulnerability directly
    to the maintainers of this repository.
-   We will review all reported vulnerabilities and take appropriate action.
+
+That's it! We will review all reported vulnerabilities and take appropriate action.
 
 Please do not disclose the vulnerability publicly until it has been addressed.
 

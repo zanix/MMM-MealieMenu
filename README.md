@@ -10,7 +10,7 @@
 [![Last commit][last-commit-shield]](https://github.com/zanix/MMM-MealieMenu/commits/main)
 [![Commits][commits-shield]](https://github.com/zanix/MMM-MealieMenu/commits/main)
 
-**MMM-MealieMenu is a module for [MagicMirror²](https://github.com/MagicMirrorOrg/MagicMirror) that displays your [Mealie][mealie-io-link] meal plan for the week.**
+**A [MagicMirror²](https://github.com/MagicMirrorOrg/MagicMirror) module that displays your [Mealie][mealie-io-link] meal plan.**
 
 ## Description
 
@@ -20,17 +20,32 @@ Mealie is an intuitive and easy to use recipe management app. It's designed to m
 
 Mealie is self-hostable, meaning you can run it on your own server without any reliance on cloud-services.
 
-## How it Works
+## Table of Contents
 
-After you installed MMM-MealieMenu you just configure it to your needs and that's it. You will need to provide the Mealie `host` and credentials as an `apiKey` or `username` & `password`.
-
-For more information see the [Configuration](#configuration) section.
+- [Screenshots](#screenshots)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Update](#update)
+- [API Key Generation](#api-key-generation)
+- [Configuration](#configuration)
+  - [Configuration Example](#configuration-example)
+- [Translations](#translations)
+- [Special Thanks](#special-thanks)
+- [Contributing](#contributing)
+  - [Code of Conduct](#code-of-conduct)
+- [License](#license)
+- [Changelog](#changelog)
 
 ## Screenshots
 
 <!-- prettier-ignore-start -->
 ![Example: Mealie meal plan](MMM-MealieMenu-screenshot.png)
 <!-- prettier-ignore-end -->
+
+## Requirements
+
+- MagicMirror² 2.22.0 or newer (`node_helper.js` relies on Node.js 18+ and its built-in `fetch`)
+- A [Mealie][mealie-io-link] server.
 
 ## Installation
 
@@ -41,6 +56,13 @@ cd ~/MagicMirror/modules
 git clone https://github.com/zanix/MMM-MealieMenu
 npm install --omit=dev
 ```
+
+> [!TIP]
+> You can use a specific version by checking out a tag or commit after cloning. For example, to use `v1.0.0`:
+>
+> ```bash
+> git checkout v1.0.0
+> ```
 
 ## Update
 
@@ -54,13 +76,14 @@ npm install --omit=dev
 
 Restart MagicMirror² after updating.
 
+## API Key Generation
+
+Mealie requires an API key for authentication. You can generate a key by going to your user profile in Mealie then to API Tokens link (or using this path `/user/profile/api-tokens`). You can also use your username and password for authentication, but using an API key is recommended.
+
 ## Configuration
 
-The module is quite configurable. The only required options are `host`, `apiKey` (or `username`/`password`) - all other options are **optional**.
-
-These are the possible options:
-
 <!-- prettier-ignore-start -->
+<!-- markdownlint-disable MD033 MD060 -->
 | Option                          | Description    |
 |---------------------------------|----------------|
 | `host`                          | <p>The URL to your Mealie instance.</p><p>**REQUIRED**<br>**Type:** `string`<br>**Example:** `"https://mealie.yourdomain.com"`<br>**Default value:** none</p>|
@@ -79,6 +102,7 @@ These are the possible options:
 | `showPictures`                  | <p>Show pictures corresponding to that days meal.</p><p>**Type:** `boolean`<br>**Default value:** `true`<br>**Possible values:** `true` and `false`|
 | `roundPictureCorners`           | <p>Round the meal picture corners.</p><p>**Type:** `boolean`<br>**Default value:** `false`<br>**Possible values:** `true` and `false`|
 | `defaultPicture`                | <p>Picture to display for missing recipe images or meal notes.</p><p>**Type:** `string`<br>**Example:** `"https://img.icons8.com/nolan/64/meal.png"`<br>**Default value:** `"mealie.png"`</p><p>**Note:** If the image does not have `http` or `/` in the name, the `MMM-MealieMenu` module path will be prepended to the name.</p>|
+| `groupByDay`                    | <p>Group meals under a heading for each day. The heading uses `dateFormat`, and each meal shows only its meal type (`dateMealSeperator` is not used).</p><p>**Type:** `boolean`<br>**Default value:** `false`<br>**Possible values:** `true` and `false`|
 | `showDescription`               | <p>Show the recipe description or meal note.</p><p>**Type:** `boolean`<br>**Default value:** `false`<br>**Possible values:** `true` and `false`|
 | `dateFormat`                    | <p>Display format for the date; uses [moment.js format string][moment-format-link]</p><p>**Type:** `string`<br>**Example:** `"ddd DD"`<br>**Default value:** `"dddd"`</p>|
 | `dateMealSeperator`             | <p>Set the separator between the date and meal type.</p><p>**Type:** `string`<br>**Example:** `" \| "`<br>**Default value:** `" - "`</p><p>**Note:** Above each menu item, the date and meal type are displayed. For example, by default you'll see "Tuesday - Dinner". This setting controls the characters separating `dateFormat` and the meal display.</p>|
@@ -88,7 +112,10 @@ These are the possible options:
 | `animationSpeed`                | <p>Speed of the update animation.</p><p>**Type:** `integer`<br>**Possible values:** `0` - `5000`<br>**Default value:** `500`<br>**Unit:** `milliseconds`</p>|
 | `displayLastUpdate`             | <p>Display the last update time at the end of the meal plan list.</p><p>**Type:** `boolean`<br>**Default value:** `true`<br>**Possible values:** `true` and `false`</p>|
 | `displayLastUpdateFormat`       | <p>Format to use for the time display if `displayLastUpdate:true`; uses [moment.js format string][moment-format-link]</p><p>**Type:** `string`<br>**Example:** `'HH:mm:ss'`<br>**Default value:** `'MMM D - h:mm:ss a'`|
+<!-- markdownlint-enable MD033 MD060 -->
 <!-- prettier-ignore-end -->
+
+### Configuration Example
 
 Here is an example of an entry in `config.js`. Take note of `mealTypeName` and `mealSortOrder`. Here, we use the `side` meal type as a reminder of things we need to do to prepare for future meals, e.g., thaw meat. `mealTypeName` changes what appears, and `mealSortOrder` moves the side entries to the top of the list for each day.
 
@@ -111,13 +138,14 @@ Here is an example of an entry in `config.js`. Take note of `mealTypeName` and `
 },
 ```
 
-## Multiple Instances
+## Translations
 
-It is possible to use multiple instances of this module just by adding another entry of the MMM-MealieMenu module to the `config.js` of your mirror.
+UI text lives in `translations/en.json` and follows MagicMirror's `language` setting, falling back to English. To add a language, copy `en.json` to `translations/<lang>.json`, translate the values, and register it in the `getTranslations()` function in `MMM-MealieMenu.js`.
 
 ## Special Thanks
 
 - [Michael Teeuw](https://github.com/MichMich) for creating the project [MagicMirror²](https://github.com/MagicMirrorOrg/MagicMirror). You can sponsor the MagicMirror² project on their [donate](https://magicmirror.builders/#donate) page.
+- [KristjanESPERANTO](https://github.com/KristjanESPERANTO) for a great module standards example with [MMM-PublicTransportHafas](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas) and of course for the [3rd Party Modules](https://modules.magicmirror.builders) site.
 - [Kael Spencer](https://github.com/kaelspencer) for creating the [MMM-PaprikaMenu](https://github.com/kaelspencer/MMM-PaprikaMenu) module, on which this one is originally based.
 - [Brian O'Connor](https://github.com/btoconnor) for contributing to this project.
 
@@ -126,6 +154,18 @@ It is possible to use multiple instances of this module just by adding another e
 If you find any problems, bugs or have questions, please [open a GitHub issue](https://github.com/zanix/MMM-MealieMenu/issues) in this repository.
 
 Pull requests are of course very welcome. Please see [Contributing](.github/CONTRIBUTING.md) and the [Pull Request Template](.github/PULL_REQUEST_TEMPLATE.md) for details.
+
+### Code of Conduct
+
+Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Changelog
+
+All notable changes to this project will be documented in the [CHANGELOG.md](CHANGELOG.md) file.
 
 [mealie-io-link]: https://mealie.io
 [moment-format-link]: https://momentjs.com/docs/#/displaying/format/

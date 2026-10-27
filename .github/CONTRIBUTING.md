@@ -11,10 +11,10 @@ Run `npm install` since the normal installation instructions do not install the 
 ## Developer Commands
 
 - `npm install` - Install all dependencies including development dependencies
-- `npm run lint` - Run linting and formatter checks
-- `npm run lint:fix` - Fix linting and formatter issues
-- `npm run release` - Create a new release (Bumps version, creates changelog, commits, tags)
-- `npm run test` - Run linting and formatter checks
+- `node --run lint` - Run linting and formatter checks
+- `node --run lint:fix` - Fix linting and formatter issues
+- `node --run release` - Create a new release (Bumps version, creates changelog, commits, tags)
+- `node --run test` - Run linting and formatter checks
 
 ## Linters
 
@@ -22,7 +22,7 @@ Run `npm install` since the normal installation instructions do not install the 
 
 Configuration for Prettier is in `prettier.config.mjs` and `.prettierignore`. ESlint configuration is in `eslint.config.mjs`.
 
-To run automatic linting, use `npm run lint:fix`.
+To run automatic linting, use `node --run lint:fix`.
 
 ## Testing
 

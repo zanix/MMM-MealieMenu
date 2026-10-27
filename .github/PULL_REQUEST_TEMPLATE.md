@@ -8,7 +8,7 @@ Hello and thank you for wanting to contribute to MMM-MealieMenu!
      - If so, reference the issue like this `Fixes #<issue_number>`
    - What does the pull request accomplish? Use a list if needed.
    - If it includes major visual changes please add screenshots.
-2. Please run `npm run lint:fix` before submitting so that style issues are fixed.
+2. Please run `node --run lint:fix` before submitting so that style issues are fixed.
 3. Ensure your commit messages match the [conventionalcommits.org](https://www.conventionalcommits.org/) specification
    - This is so [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) can auto-generate `CHANGELOG.md` and release notes.
 
