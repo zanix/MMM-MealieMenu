@@ -5,7 +5,8 @@
   "keywords": [
     "MagicMirror",
     "mealie",
-    "recipie"
+    "recipe",
+    "meal plan"
   ],
   "homepage": "https://github.com/zanix/MMM-MealieMenu#readme",
   "bugs": {
@@ -58,7 +59,7 @@
     "commit-and-tag-version": "^13.3.0",
     "eslint": "^10.13.0",
     "eslint-plugin-import-x": "^4.17.1",
-    "eslint-plugin-package-json": "^1.10.1",
+    "eslint-plugin-package-json": "^1.12.0",
     "globals": "^17.13.0",
     "lint-staged": "^17.6.0",
     "prettier": "^3.9.10",
