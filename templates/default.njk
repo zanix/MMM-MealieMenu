@@ -1,10 +1,4 @@
-
-{% if error %}<div class="light xsmall">{{ errorText }}</div>{% endif %}
-{% if not loaded %}<div class="dimmed light small">{{ 'LOADING' | translate }}</div>{% endif %}
-
-{% if loaded %}
-  <div class="meal-items">
-    {% for meal in menu.meals %}
+{% macro mealItem(meal, config, grouped) %}
     <div class="meal-item{% if meal.isToday %} today{% elif meal.shouldFade %} fade{% endif %}">
       {% if config.showPictures %}
       <div class="meal-image">
@@ -15,8 +9,10 @@
       {% endif %}
       <div class="meal-info">
         <div class="meal-header">
+          {% if not grouped %}
           <span class="meal-date">{{ meal.date }}</span>
           <span class="meal-separator">{{ config.dateMealSeperator }}</span>
+          {% endif %}
           <span class="meal-type">{{ meal.meal }}</span>
         </div>
         <div class="meal-name">
@@ -29,7 +25,31 @@
         {% endif %}
       </div>
     </div>
+
+{% endmacro %}
+
+
+{% if error %}<div class="light xsmall">{{ errorText }}</div>{% endif %}
+{% if not loaded %}<div class="dimmed light small">{{ 'LOADING' | translate }}</div>{% endif %}
+
+{% if loaded %}
+  <div class="meal-items">
+    {# Group meals by day #}
+    {% if config.groupByDay %}
+    {% for day in menu.days %}
+    <div class="meal-day{% if day.isToday %} today{% elif day.shouldFade %} fade{% endif %}">
+      <div class="meal-day-header">{% if day.isToday %}{{ 'TODAY' | translate }}{% else %}{{ day.date }}{% endif %}</div>
+      {% for meal in day.meals %}
+      {{ mealItem(meal, config, true) }}
+      {% endfor %}
+    </div>
     {% endfor %}
+    {% else %}
+    {# List all meals without grouping #}
+    {% for meal in menu.meals %}
+    {{ mealItem(meal, config, false) }}
+    {% endfor %}
+    {% endif %}
 
     {% if menu.meals | length == 0 %}
     <div class="meal-empty">

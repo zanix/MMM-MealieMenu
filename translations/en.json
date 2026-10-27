@@ -1,5 +1,7 @@
 {
   "LOADING": "Loading…",
+  "TODAY": "Today",
+  "TOMORROW": "Tomorrow",
   "ERROR_AUTH": "Authentication Error: There was an error fetching a user token. Check your username and password.",
   "ERROR_FETCH": "Fetch Error: There was an error fetching data from Mealie.",
   "ERROR_INIT": "Initialization Error: There was an error setting up Mealie.",

@@ -21,6 +21,9 @@
   margin: 3px 0 2px;
   padding: 0 5px;
 }
+.MMM-MealieMenu .meal-item:last-child {
+  border-bottom: none;
+}
 
 .MMM-MealieMenu .meal-item.fade {
   opacity: 0.33;
@@ -49,19 +52,17 @@
   gap: 0;
   grid-area: meal-info;
   text-align: left;
-  line-height: 24px;
+  line-height: 1.2em;
 }
 
 .MMM-MealieMenu .meal-header {
   grid-area: meal-header;
-  /* eslint-disable-next-line css/no-invalid-properties */
-  font-size: var(--font-size-xsmall);
+  font-size: 0.65em;
 }
 
 .MMM-MealieMenu .meal-name {
   grid-area: meal-name;
-  /* eslint-disable-next-line css/no-invalid-properties */
-  font-size: var(--font-size-small);
+  font-size: 0.9em;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
@@ -69,24 +70,44 @@
 
 .MMM-MealieMenu .meal-description {
   grid-area: meal-description;
-  /* eslint-disable-next-line css/no-invalid-properties */
-  font-size: var(--font-size-xsmall);
+  font-size: 0.65em;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
 }
 
 .MMM-MealieMenu .meal-item.today .meal-header {
-  /* eslint-disable-next-line css/no-invalid-properties */
-  font-size: calc(var(--font-size-small) - 0.1rem);
+  font-size: 0.75em;
 }
 
 .MMM-MealieMenu .meal-item.today .meal-name {
   color: #fff;
-  /* eslint-disable-next-line css/no-invalid-properties */
-  font-size: calc(var(--font-size-medium) - 0.3rem);
+  font-size: 1em;
+}
+.MMM-MealieMenu .meal-item.today .meal-description {
+  font-size: 0.75em;
 }
 
 .MMM-MealieMenu .meal-empty {
   text-align: center;
+}
+
+.MMM-MealieMenu .meal-day-header {
+  margin: 0.1em 0 0.1em;
+  padding: 0 5px;
+  text-align: left;
+  border-bottom: solid 1px #666;
+  font-size: 0.8em;
+}
+
+.MMM-MealieMenu .meal-day.today .meal-day-header {
+  color: #fff;
+}
+
+.MMM-MealieMenu .meal-day.fade {
+  opacity: 0.33;
+}
+
+.MMM-MealieMenu .meal-day .meal-item.fade {
+  opacity: 1;
 }

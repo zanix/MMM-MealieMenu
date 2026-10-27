@@ -29,6 +29,7 @@ Module.register("MMM-MealieMenu", {
     showPictures: true,                // Show pictures corresponding to that days meal.
     roundPictureCorners: false,        // Round the meal picture corners.
     defaultPicture: "mealie.png",      // Default image to display for missing recipe images or meal notes.
+    groupByDay: false,                 // Group meals under a heading for each day.
     showDescription: false,            // Show the recipe/meal description.
     dateFormat: "dddd",                // Display format for the date; uses moment.js format string.
     dateMealSeperator: " - ",          // Set the separator between the date and meal type.
@@ -151,7 +152,7 @@ Module.register("MMM-MealieMenu", {
           this.dataRefreshTimestamp = now.format("x");
           this.dataRefreshDisplayTime = now.format(this.config.displayLastUpdateFormat);
 
-          this.formattedMenuData = {meals: this.formatMeals(payload.meals)};
+          this.formattedMenuData = this.buildMenu(this.formatMeals(payload.meals));
           this.error = null;
           this.loaded = true;
 
@@ -264,6 +265,29 @@ Module.register("MMM-MealieMenu", {
     }
 
     return this.filterDaysAndEntries(formatted);
+  },
+
+  /**
+   * Builds the menu data: the flat meal list and the same meals grouped by day.
+   */
+  buildMenu (meals) {
+    const days = [];
+    for (const meal of meals) {
+      const last = days.at(-1);
+      if (last && last.rawDate === meal.rawDate) {
+        last.meals.push(meal);
+      } else {
+        days.push({
+          rawDate: meal.rawDate,
+          date: meal.date,
+          isToday: meal.isToday,
+          shouldFade: meal.shouldFade,
+          meals: [meal]
+        });
+      }
+    }
+
+    return {meals, days};
   },
 
   /**
