@@ -1,0 +1,10 @@
+{
+  "packageFiles": ["package.json"],
+  "bumpFiles": [
+    "package.json",
+    {
+      "filename": "lib/client.js",
+      "type": "plain-text"
+    }
+  ]
+}

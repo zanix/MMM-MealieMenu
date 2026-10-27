@@ -74,7 +74,7 @@ Module.register("MMM-MealieMenu", {
       return;
     }
 
-    // Check for an external default image.
+    // Check for an external default image. Needs this.file to get the correct path to the module folder.
     if (!this.config.defaultPicture.startsWith("http") && !this.config.defaultPicture.includes("/")) {
       this.config.defaultPicture = this.file(this.config.defaultPicture);
     }
@@ -149,7 +149,6 @@ Module.register("MMM-MealieMenu", {
           this.dataRefreshDisplayTime = now.format(this.config.displayLastUpdateFormat);
 
           this.formattedMenuData = {meals: this.formatMeals(payload.meals)};
-          Log.debug("Meals formatted:", this.formattedMenuData);
           this.error = null;
           this.loaded = true;
 
@@ -221,20 +220,8 @@ Module.register("MMM-MealieMenu", {
    * Call the node_Helper to fetch meal plan data from the API.
    */
   getData () {
-    this.sendSocketNotification("MEALIE_MENU_GET", {
-      identifier: this.identifier,
-      host: this.config.host,
-      apiKey: this.config.apiKey,
-      username: this.config.username,
-      password: this.config.password,
-      householdId: this.config.householdId,
-      groupId: this.config.groupId,
-      weekStartsOnMonday: this.config.weekStartsOnMonday,
-      currentWeek: this.config.currentWeek,
-      dayLimit: this.config.dayLimit,
-      priorDayLimit: this.config.priorDayLimit,
-      mealSortOrder: this.config.mealSortOrder
-    });
+    // The helper keeps the validated config from MEALIE_INIT.
+    this.sendSocketNotification("MEALIE_MENU_GET", {identifier: this.identifier});
   },
 
   /**
