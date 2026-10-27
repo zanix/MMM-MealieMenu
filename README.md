@@ -39,6 +39,7 @@ Just clone `MMM-MealieMenu` into the modules folder of your MagicMirror² instal
 ```bash
 cd ~/MagicMirror/modules
 git clone https://github.com/zanix/MMM-MealieMenu
+npm install --omit=dev
 ```
 
 ## Update
@@ -48,6 +49,7 @@ Go to the `MMM-MealieMenu` folder inside MagicMirror² modules folder and pull t
 ```bash
 cd ~/MagicMirror/modules/MMM-MealieMenu
 git pull
+npm install --omit=dev
 ```
 
 Restart MagicMirror² after updating.
