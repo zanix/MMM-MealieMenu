@@ -1,9 +1,10 @@
-.MMM-MealieMenu * {
-  box-sizing: border-box;
-}
-
 .MMM-MealieMenu .module-content {
   width: 100%;
+}
+
+.MMM-MealieMenu .mealie-error {
+  color: #e5534b;
+  font-size: 0.75em;
 }
 
 .MMM-MealieMenu .meal-items {
@@ -12,14 +13,43 @@
   place-content: normal;
 }
 
+/* Meal Day group */
+.MMM-MealieMenu .meal-day {
+  display: flex;
+  flex-flow: column nowrap;
+  place-content: normal;
+  gap: 0.1em;
+}
+
+.MMM-MealieMenu .meal-day-header {
+  margin: 0.1em 0 0.1em;
+  padding: 0 0.3em;
+  text-align: left;
+  border-bottom: solid 1px #666;
+  font-size: 0.8em;
+}
+
+.MMM-MealieMenu .meal-day.today .meal-day-header {
+  color: #fff;
+}
+
+.MMM-MealieMenu .meal-day.fade {
+  opacity: 0.33;
+}
+/* Fix the fade of Meal items */
+.MMM-MealieMenu .meal-day .meal-item.fade {
+  opacity: 1;
+}
+
+/* Meal item */
 .MMM-MealieMenu .meal-item {
   display: grid;
   grid: min-content max-content / min-content;
   grid-template-areas: "meal-image meal-info";
-  gap: 0 5px;
+  gap: 0 0.3em;
   border-bottom: solid 1px #222;
-  margin: 3px 0 2px;
-  padding: 0 5px;
+  margin-top: 0.2em;
+  padding: 0 0.3em;
 }
 .MMM-MealieMenu .meal-item:last-child {
   border-bottom: none;
@@ -76,6 +106,7 @@
   white-space: nowrap;
 }
 
+/* "Today" styles */
 .MMM-MealieMenu .meal-item.today .meal-header {
   font-size: 0.75em;
 }
@@ -88,26 +119,7 @@
   font-size: 0.75em;
 }
 
+/* Empty meal styles */
 .MMM-MealieMenu .meal-empty {
   text-align: center;
-}
-
-.MMM-MealieMenu .meal-day-header {
-  margin: 0.1em 0 0.1em;
-  padding: 0 5px;
-  text-align: left;
-  border-bottom: solid 1px #666;
-  font-size: 0.8em;
-}
-
-.MMM-MealieMenu .meal-day.today .meal-day-header {
-  color: #fff;
-}
-
-.MMM-MealieMenu .meal-day.fade {
-  opacity: 0.33;
-}
-
-.MMM-MealieMenu .meal-day .meal-item.fade {
-  opacity: 1;
 }
