@@ -43,15 +43,15 @@ Mealie is self-hostable, meaning you can run it on your own server without any r
 
 **`default` template**
 
-<!-- prettier-ignore-start -->
-![Example: Mealie meal plan, default template](MMM-MealieMenu-screenshot.png)
-<!-- prettier-ignore-end -->
+![Example: Mealie meal plan, default template](images/screenshot-default.png)
 
 **`mealie` template**
 
-<!-- prettier-ignore-start -->
-![Example: Mealie meal plan, mealie template](screenshot-mealie-theme.png)
-<!-- prettier-ignore-end -->
+![Example: Mealie meal plan, mealie template](images/screenshot-mealie-theme.png)
+
+**`mealie` columns template** (when module width is at least 400px)
+
+![Example: Mealie meal plan, mealie columns template](images/screenshot-mealie-theme-columns.png)
 
 ## Requirements
 
