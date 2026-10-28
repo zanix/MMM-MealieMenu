@@ -25,6 +25,7 @@ Module.register("MMM-MealieMenu", {
     priorEntryLimit: 50,               // How many entries from previous days should be shown in total.
 
     // Look and Feel
+    fontSize: "small",                 // MagicMirror size class: "xsmall" | "small" | "medium" | "large" | "xlarge"
     fadePriorEntries: true,            // Fade previous days in the current week.
     showPictures: true,                // Show pictures corresponding to that days meal.
     roundPictureCorners: false,        // Round the meal picture corners.

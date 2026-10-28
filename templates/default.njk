@@ -29,7 +29,7 @@
 {% if not loaded %}<div class="dimmed small">{{ 'LOADING' | translate }}</div>{% endif %}
 
 {% if loaded and not error %}
-<div class="meal-items">
+<div class="meal-items {{ config.fontSize }}">
   {# Group meals by day #}
   {% if config.groupByDay %}
   {% for day in menu.days %}
