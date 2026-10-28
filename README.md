@@ -126,6 +126,7 @@ Here is an example of an entry in `config.js`. Take note of `mealTypeName` and `
     header: "Dinner Menu",
     position: "top_left",
     config: {
+        host: "https://mealie.yourdomain.com",
         apiKey: "eyhJbcG...",                  // Not needed when using username/password
         username: "yourmealieemail@email.com", // Not needed when using apiKey
         password: "Secret!",                   // Not needed when using apiKey
@@ -138,6 +139,13 @@ Here is an example of an entry in `config.js`. Take note of `mealTypeName` and `
     }
 },
 ```
+
+### Configuration Validation
+
+The config is validated and sanitized when the module starts, in both the browser and the helper. Problems are logged:
+
+- **Errors** stop the module and show "invalid configuration" (or "no credentials"): an invalid `host` (must be `http://` or `https://`), or neither an `apiKey` nor a `username`. The `apiKey` takes priority; `username` and `password` are ignored when it is set.
+- **Warnings** replace the bad value with its default: unknown option values (`fontSize`, `mealSortOrder`, etc.), invalid types (e.g., `dayLimit` is a string instead of an integer), or missing required values (e.g., `password` when using `username`).
 
 ## Translations
 

@@ -50,6 +50,9 @@
       "prettier --write --ignore-unknown"
     ]
   },
+  "dependencies": {
+    "moment": "^2.31.0"
+  },
   "devDependencies": {
     "@eslint/css": "^2.0.1",
     "@eslint/js": "^10.0.1",
@@ -67,8 +70,5 @@
   },
   "engines": {
     "node": ">=22"
-  },
-  "dependencies": {
-    "moment": "^2.31.0"
   }
 }
