@@ -25,6 +25,7 @@ Module.register("MMM-MealieMenu", {
     priorEntryLimit: 50,               // How many entries from previous days should be shown in total.
 
     // Look and Feel
+    template: "default",               // Layout: "default" | "mealie" (columns of days like Mealie, grouped by meal type).
     fontSize: "small",                 // MagicMirror size class: "xsmall" | "small" | "medium" | "large" | "xlarge"
     fadePriorEntries: true,            // Fade previous days in the current week.
     showPictures: true,                // Show pictures corresponding to that days meal.
@@ -114,7 +115,7 @@ Module.register("MMM-MealieMenu", {
    * Core method, called to request the template file.
    */
   getTemplate () {
-    return "templates/default.njk";
+    return `templates/${this.config.template}.njk`;
   },
 
   /**
@@ -255,6 +256,7 @@ Module.register("MMM-MealieMenu", {
         name: meal.recipe?.name || meal.title,
         description: meal.recipe?.description || meal.text,
         rawDate: meal.date,
+        entryType: meal.entryType,
         date: moment(meal.date).format(this.config.dateFormat),
         meal: this.typeToMealDisplay(meal.entryType),
         photoUrl: meal.recipe?.id
@@ -283,8 +285,21 @@ Module.register("MMM-MealieMenu", {
           date: meal.date,
           isToday: meal.isToday,
           shouldFade: meal.shouldFade,
-          meals: [meal]
+          meals: [meal],
+          groups: []
         });
+      }
+    }
+
+    // Within each day, group the (already sorted) meals by meal type.
+    for (const day of days) {
+      for (const meal of day.meals) {
+        const group = day.groups.at(-1);
+        if (group && group.entryType === meal.entryType) {
+          group.meals.push(meal);
+        } else {
+          day.groups.push({entryType: meal.entryType, name: meal.meal, meals: [meal]});
+        }
       }
     }
 
