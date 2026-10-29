@@ -122,7 +122,7 @@ module.exports = NodeHelper.create({
 
     if (config.currentWeek) {
       const startOfWeek = this.getFirstDayOfWeek(config.weekStartsOnMonday);
-      const endOfWeek = startDate.clone().add(6, "days");
+      const endOfWeek = startOfWeek.clone().add(6, "days");
 
       // Find the latest start date.
       startDate = moment.max([
