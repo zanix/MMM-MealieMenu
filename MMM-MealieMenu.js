@@ -33,6 +33,7 @@ Module.register("MMM-MealieMenu", {
     defaultPicture: "mealie.png",      // Default image to display for missing recipe images or meal notes.
     groupByDay: false,                 // Group meals under a heading for each day.
     showDescription: false,            // Show the recipe/meal description.
+    showTodayLabel: true,              // Show a "Today" label for today's meals.
     dateFormat: "dddd",                // Display format for the date; uses moment.js format string.
     dateMealSeperator: " - ",          // Set the separator between the date and meal type.
     mealSortOrder: ["breakfast", "lunch", "dinner", "side"], // An array determining the order and visibility of the meal type headers.

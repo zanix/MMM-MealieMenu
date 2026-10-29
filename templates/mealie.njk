@@ -6,7 +6,7 @@
   <div class="days">
     {% for day in menu.days %}
     <div class="day{% if day.isToday %} today{% elif day.shouldFade %} fade{% endif %}">
-      <div class="day-header">{% if day.isToday %}{{ 'TODAY' | translate }}{% else %}{{ day.date }}{% endif %}</div>
+      <div class="day-header">{% if day.isToday and config.showTodayLabel %}{{ 'TODAY' | translate }}{% else %}{{ day.date }}{% endif %}</div>
       {% for group in day.groups %}
       <div class="type-group">
         <div class="type-name">{{ group.name }}</div>
