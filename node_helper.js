@@ -6,8 +6,6 @@ const moment = require("moment");
 const {validate} = require("./lib/config");
 const {MealieClient} = require("./lib/client");
 
-// Example result from mealplans API see example_data.json.
-
 module.exports = NodeHelper.create({
   start () {
     Log.log("node_helper started");

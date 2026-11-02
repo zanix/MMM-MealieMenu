@@ -62,7 +62,18 @@ export default defineConfig([
   },
   {
     files: ["test/**/*.js"],
-    rules: {"no-undefined": "off", "max-lines": "off", "max-lines-per-function": "off"}
+    rules: {
+      "no-undefined": "off",
+      "max-lines": "off",
+      "max-lines-per-function": "off",
+      "require-await": "off",
+      "id-length": "off",
+      camelcase: ["error", {properties: "never"}],
+      "no-underscore-dangle": ["error", {allow: ["_load"]}],
+      "func-name-matching": "off",
+      "no-script-url": "off",
+      "no-promise-executor-return": "off"
+    }
   },
   {
     files: ["**/*.json"],
