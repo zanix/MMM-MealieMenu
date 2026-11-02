@@ -13,6 +13,7 @@ module.exports = NodeHelper.create({
     Log.log("node_helper started");
     // One client and config per module instance, keyed by identifier.
     this.instances = new Map();
+    this.expressApp.get(`/${this.name}/image/:identifier/:recipeId`, (req, res) => this.serveImage(req, res));
   },
 
   socketNotificationReceived (notification, payload) {
@@ -108,6 +109,32 @@ module.exports = NodeHelper.create({
       this.sendSocketNotification("MEALIE_ERROR", {code: "FETCH", details: error.message, identifier});
     } finally {
       instance.outstandingRequest = false;
+    }
+  },
+
+  /**
+   * Proxies a recipe image from Mealie so the browser never needs to reach Mealie directly.
+   * @param {Object} req The Express request.
+   * @param {Object} res The Express response.
+   * @returns {Promise<void>} Resolves when the response was sent.
+   */
+  async serveImage (req, res) {
+    const {identifier, recipeId} = req.params;
+    const instance = this.instances.get(identifier);
+    if (!instance || !(/^[\w-]{1,64}$/u).test(recipeId)) {
+      res.sendStatus(404);
+      return;
+    }
+
+    try {
+      const {body, contentType} = await instance.client.getRecipeImage(recipeId);
+      res.set({"Content-Type": contentType, "Cache-Control": "public, max-age=86400", "X-Content-Type-Options": "nosniff"});
+      res.send(body);
+    } catch (error) {
+      Log.warn(`Image ${recipeId} failed: ${error.message}`);
+      res.sendStatus(error.status === 404
+        ? 404
+        : 502);
     }
   },
 
