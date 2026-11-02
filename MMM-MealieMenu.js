@@ -90,10 +90,7 @@ Module.register("MMM-MealieMenu", {
    * Core method, called to request any additional scripts that need to be loaded.
    */
   getScripts () {
-    return [
-      this.file("lib/config.js"),
-      this.file("node_modules/moment/min/moment-with-locales.js")
-    ];
+    return [this.file("lib/config.js")];
   },
 
   /**
