@@ -1,0 +1,46 @@
+{% if error %}<div class="module-error xsmall">{{ errorText }}</div>{% endif %}
+{% if not loaded %}<div class="dimmed small">{{ 'LOADING' | translate }}</div>{% endif %}
+
+{% if loaded and not error %}
+<div class="mealie-theme {{ config.fontSize }}">
+  <div class="days">
+    {% for day in menu.days %}
+    <div class="day{% if day.isToday %} today{% elif day.shouldFade %} fade{% endif %}">
+      <div class="day-header">{% if day.isToday and config.showTodayLabel %}{{ 'TODAY' | translate }}{% else %}{{ day.date }}{% endif %}</div>
+      {% for group in day.groups %}
+      <div class="type-group">
+        <div class="type-name">{{ group.name }}</div>
+        {% for meal in group.meals %}
+        <div class="entry">
+          {% if config.showPictures %}
+          <img class="entry-image{% if config.roundPictureCorners %} rounded{% endif %}" src="{{ meal.photoUrl }}" onerror="src='{{ config.defaultPicture }}'" />
+          {% endif %}
+          <div class="entry-text">
+            <div class="entry-title">{{ meal.name }}</div>
+            {% if config.showDescription %}
+            <div class="entry-description">{{ meal.description }}</div>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if menu.meals | length == 0 %}
+  <div class="module-empty">
+    {{ 'MEALIE_EMPTY_MEALPLAN' | translate }}
+  </div>
+  {% endif %}
+</div>
+
+<div class="meta-timestamp" id="{{ moduleTimestampIdPrefix + identifier }}" data-timestamp="{{ timestamp }}">
+  {% if config.displayLastUpdate %}
+  <div class="dimmed light xsmall">
+    {{ lastUpdated }}
+  </div>
+  {% endif %}
+</div>
+{% endif %}

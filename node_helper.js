@@ -1,22 +1,23 @@
+"use strict";
+
 const NodeHelper = require("node_helper");
 const Log = require("logger");
 const moment = require("moment");
-
-// Example result from mealplans API see example_data.json.
+const {validate} = require("./lib/config");
+const {MealieClient} = require("./lib/client");
 
 module.exports = NodeHelper.create({
   start () {
-    Log.log(`Starting node_helper for module [${this.name}]`);
-    this.token = null;
-    this.tokenExpiration = null;
-    this.outstandingRequest = false;
-    this.ApiVersion = "1.0.0";
+    Log.log("node_helper started");
+    // One client and config per module instance, keyed by identifier.
+    this.instances = new Map();
+    this.expressApp.get(`/${this.name}/image/:identifier/:recipeId`, (req, res) => this.serveImage(req, res));
   },
 
   socketNotificationReceived (notification, payload) {
     switch (notification) {
       case "MEALIE_INIT":
-        this.initApi(payload);
+        this.initInstance(payload);
         break;
 
       case "MEALIE_MENU_GET":
@@ -25,240 +26,151 @@ module.exports = NodeHelper.create({
     }
   },
 
-  async initApi (payload) {
+  /**
+   * Initializes the Mealie client for a module instance.
+   * @param {Object} payload The notification payload.
+   * @param {string} payload.identifier The identifier for this instance.
+   * @param {Object} payload.config The configuration object for this instance.
+   * @param {Object} payload.defaults The default configuration for this instance.
+   * @returns {Promise<void>} Resolves when the instance is connected or the error was reported.
+   */
+  async initInstance ({identifier, config: rawConfig, defaults}) {
+    // Do not trust the configuration: validate and sanitize it here too.
+    const {config, warnings, errors} = validate(rawConfig, defaults);
+    warnings.forEach((warning) => Log.warn(`Config: ${warning}`));
+    if (errors.length) {
+      errors.forEach((error) => Log.error(`Config: ${error.message}`));
+      this.sendSocketNotification("MEALIE_ERROR", {identifier, code: errors[0].code});
+      return;
+    }
+    Log.info(`Initializing instance ${identifier} for ${config.host} (auth: ${config.apiKey
+      ? "apiKey"
+      : "user/password"})`);
+
     try {
-      // Get API version
-      await this.getApiVersion(payload);
+      const client = new MealieClient(config, {log: Log});
+      await client.connect();
+      this.instances.set(identifier, {client, config, outstandingRequest: false});
 
-      // Use API key or fetch token
-      if (payload.apiKey) {
-        this.token = payload.apiKey;
-      } else {
-        await this.getToken(payload);
-      }
-
-      this.initComplete(payload, this.token);
+      this.sendSocketNotification("MEALIE_INITIALIZED", {identifier});
     } catch (error) {
-      Log.error(`[${this.name}] Initialization error:`, JSON.stringify(error.toString()));
+      Log.error("Initialization error:", error.message);
 
-      this.sendSocketNotification("MEALIE_ERROR", {
-        error: "INIT_ERROR",
-        details: error,
-        identifier: payload.identifier
-      });
+      this.sendSocketNotification("MEALIE_ERROR", {code: "INIT", details: error.message, identifier});
     }
   },
 
-  initComplete (payload) {
-    this.sendSocketNotification("MEALIE_INITIALIZED", {
-      identifier: payload.identifier
-    });
-  },
+  /**
+   * Fetches the meal plan for a module instance and sends it to the front end.
+   * @param {Object} payload The notification payload.
+   * @param {string} payload.identifier The identifier for this instance.
+   * @returns {Promise<void>} Resolves when the data or an error was sent.
+   */
+  async getMeals ({identifier}) {
+    const instance = this.instances.get(identifier);
+    if (!instance) {
+      Log.warn(`Instance ${identifier} is not initialized.`);
+      return;
+    }
+    if (instance.outstandingRequest) {
+      Log.info("Outstanding request, not trying again.");
+      return;
+    }
 
-  getApiVersion (payload) {
-    const url = new URL(`${payload.host}/api/app/about`);
+    const {client, config} = instance;
+    instance.outstandingRequest = true;
 
-    return fetch(url, {
-      method: "GET",
-      headers: {
-        Accept: "application/json"
+    try {
+      try {
+        await client.ensureToken();
+      } catch (error) {
+        Log.error("Auth error:", error.message);
+        this.sendSocketNotification("MEALIE_ERROR", {code: "AUTH", details: error.message, identifier});
+        return;
       }
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response;
-        }
-        throw response.statusText;
-      })
-      .then((response) => response.json())
-      .then((data) => {
-        this.ApiVersion = data.version;
-      })
-      .catch((error) => {
-        throw error;
+
+      const {startDate, endDate} = this.getDateRange(config);
+      Log.info(`Fetching meals: Start Date ${startDate} - End date ${endDate}`);
+
+      const meals = await client.getMealPlan({
+        startDate,
+        endDate,
+        householdId: config.householdId,
+        groupId: config.groupId,
+        mealTypes: config.mealSortOrder
       });
+      Log.debug("Meals:", JSON.stringify(meals));
+
+      this.sendSocketNotification("MEALIE_MENU_DATA", {identifier, meals});
+    } catch (error) {
+      Log.error("Fetch error:", error.message);
+      this.sendSocketNotification("MEALIE_ERROR", {code: "FETCH", details: error.message, identifier});
+    } finally {
+      instance.outstandingRequest = false;
+    }
   },
 
-  getToken (payload) {
-    const url = new URL(`${payload.host}/api/auth/token`);
-    const params = new URLSearchParams();
-    params.append("username", payload.username);
-    params.append("password", payload.password);
-
-    return fetch(url, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/x-www-form-urlencoded"
-      },
-      body: params
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response;
-        }
-        throw response.statusText;
-      })
-      .then((response) => response.json())
-      .then((data) => {
-        this.token = data.access_token;
-        // Decode the JWT to update expiration time.
-        const decodedToken = this.parseJwt(data.access_token);
-        this.tokenExpiration = moment.unix(decodedToken.exp);
-      })
-      .catch((error) => {
-        throw error;
-      });
-  },
-
-  getMeals (payload) {
-    if (this.outstandingRequest === true) {
-      Log.info(`[${this.name}] Outstanding request, not trying again.`);
+  /**
+   * Proxies a recipe image from Mealie so the browser never needs to reach Mealie directly.
+   * @param {Object} req The Express request.
+   * @param {Object} res The Express response.
+   * @returns {Promise<void>} Resolves when the response was sent.
+   */
+  async serveImage (req, res) {
+    const {identifier, recipeId} = req.params;
+    const instance = this.instances.get(identifier);
+    if (!instance || !(/^[\w-]{1,64}$/u).test(recipeId)) {
+      res.sendStatus(404);
       return;
     }
 
-    // Check for expired token and renew if needed.
-    const now = moment();
-    if (this.token && now.isAfter(this.tokenExpiration)) {
-      Log.info(`[${this.name}] Token expired, refreshing...`);
-      this.getToken(payload)
-        .then(() => {
-          // Call getMeals again after successful refresh.
-          this.getMeals(payload);
-        })
-        .catch((error) => {
-          Log.error(`[${this.name}] Auth error:`, JSON.stringify(error.toString()));
-
-          this.sendSocketNotification("MEALIE_ERROR", {
-            error: "AUTH_ERROR",
-            details: error,
-            identifier: payload.identifier
-          });
-        });
-      return;
+    try {
+      const {body, contentType} = await instance.client.getRecipeImage(recipeId);
+      res.set({"Content-Type": contentType, "Cache-Control": "public, max-age=86400", "X-Content-Type-Options": "nosniff"});
+      res.send(body);
+    } catch (error) {
+      Log.warn(`Image ${recipeId} failed: ${error.message}`);
+      res.sendStatus(error.status === 404
+        ? 404
+        : 502);
     }
+  },
 
-    this.outstandingRequest = true;
-
+  /**
+   * Works out the first and last day to request.
+   * @param {Object} config The sanitized config.
+   * @returns {{startDate: string, endDate: string}} Dates formatted as YYYY-MM-DD.
+   */
+  getDateRange (config) {
     let startDate = moment();
     let endDate = moment();
 
-    if (payload.currentWeek) {
-      const startOfWeek = this.getFirstDayOfWeek(payload.weekStartsOnMonday);
-      const endOfWeek = startDate.clone().add(6, "days");
+    if (config.currentWeek) {
+      const startOfWeek = this.getFirstDayOfWeek(config.weekStartsOnMonday);
+      const endOfWeek = startOfWeek.clone().add(6, "days");
 
       // Find the latest start date.
       startDate = moment.max([
         startOfWeek,
-        moment().subtract(payload.priorDayLimit, "days")
+        moment().subtract(config.priorDayLimit, "days")
       ]);
 
       // Find the earliest end date.
       endDate = moment.min([
         endOfWeek,
-        moment().add(payload.dayLimit, "days")
+        moment().add(config.dayLimit, "days")
       ]);
     } else {
-      startDate.subtract(payload.priorDayLimit, "days");
-      endDate.add(payload.dayLimit, "days");
+      startDate.subtract(config.priorDayLimit, "days");
+      endDate.add(config.dayLimit, "days");
     }
 
-    Log.info(`[${this.name}] Fetching meals: Start Date ${startDate.format("YYYY-MM-DD")} - End date ${endDate.format("YYYY-MM-DD")}`);
-
-    let url = new URL(`${payload.host}/api/groups/mealplans`);
-    // Check for new API endpoint.
-    if (this.versionCheck(this.ApiVersion, "2.0.0")) {
-      url = new URL(`${payload.host}/api/households/mealplans`);
-    }
-
-    const params = new URLSearchParams();
-    params.append("start_date", startDate.format("YYYY-MM-DD"));
-    params.append("end_date", endDate.format("YYYY-MM-DD"));
-    params.append("orderBy", "date");
-    params.append("orderDirection", "asc");
-
-    if (payload.householdId) {
-      params.append("household_id", payload.householdId);
-    }
-    if (payload.groupId) {
-      params.append("group_id", payload.groupId);
-    }
-
-    if (payload.mealSortOrder && payload.mealSortOrder.length > 0) {
-      const mealSortOrder = payload.mealSortOrder.join("\", \"");
-      const entryType = `entryType in ["${mealSortOrder}"]`;
-      params.append("queryFilter", entryType);
-    }
-
-    url.search = params.toString();
-
-    Log.debug(`[${this.name}] API Mealplan query: ${url.search}`);
-
-    // Get the full list of meals from Mealie.
-    fetch(url, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        Authorization: `Bearer ${this.token}`
-      }
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response;
-        }
-        throw response.statusText;
-      })
-      .then((response) => response.json())
-      .then((data) => {
-        const meals = data.items;
-        Log.debug(`[${this.name}] Meals:`, JSON.stringify(meals));
-
-        this.sendSocketNotification("MEALIE_MENU_DATA", {
-          identifier: payload.identifier,
-          meals
-        });
-      })
-      .catch((error) => {
-        this.outstandingRequest = false;
-        Log.error(`[${this.name}] Fetch error:`, JSON.stringify(error.toString()));
-
-        this.sendSocketNotification("MEALIE_ERROR", {
-          error: "FETCH_ERROR",
-          details: error,
-          identifier: payload.identifier
-        });
-      })
-      .finally(() => {
-        this.outstandingRequest = false;
-      });
-  },
-
-  versionCheck (version, required) {
-    const minParts = required
-      .replace(/[^0-9.]/ug, "")
-      .trim()
-      .split(".");
-    const newParts = version
-      .replace(/[^0-9.]/ug, "")
-      .trim()
-      .split(".");
-    for (let part = 0; part < newParts.length; part += 1) {
-      const verA = parseInt(newParts[part], 10);
-      const verB = parseInt(minParts[part], 10);
-      if (verA > verB) {
-        return true;
-      }
-      if (verA < verB) {
-        return false;
-      }
-    }
-    return true;
+    return {startDate: startDate.format("YYYY-MM-DD"), endDate: endDate.format("YYYY-MM-DD")};
   },
 
   getFirstDayOfWeek (weekStartsOnMonday) {
     const today = moment();
-    // eslint-disable-next-line no-useless-assignment
-    let firstDayOfWeek = moment();
+    let firstDayOfWeek;
 
     // moment.isoWeekday() returns 1 for Monday, 7 for Sunday.
     if (weekStartsOnMonday) {
@@ -275,9 +187,5 @@ module.exports = NodeHelper.create({
     }
 
     return firstDayOfWeek.startOf("day");
-  },
-
-  parseJwt (token) {
-    return JSON.parse(Buffer.from(token.split(".")[1], "base64").toString());
   }
 });

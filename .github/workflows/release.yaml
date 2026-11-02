@@ -1,50 +1,50 @@
 name: Release
 
+# Releases are cut locally with `node --run release`, which updates CHANGELOG.md,
+# bumps the version and creates the tag. Pushing that tag creates the GitHub Release.
 on:
   push:
-    branches: [main, develop]
+    tags:
+      - "v*"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   release:
-    name: Release
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: write
-      issues: write
-      pull-requests: write
-      id-token: write
-
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v7
 
-      - name: 📥 Check out repository
-        uses: actions/checkout@v5
-
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-
-      - name: 📜 Use Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: lts/*
-
-      - name: 🔗 Install dependencies
-        run: npx ci
-
-      - name: 🧩 Install semantic-release extra plugins
-        run: npm install --save-dev @semantic-release/changelog @semantic-release/git
-
-      - name: 🧹 Lint
-        run: npm run lint:fix
-
-      - name: ✅ Release
+      # Pull this version's section out of CHANGELOG.md
+      - name: 📝 Extract Release Notes
+        id: extract_notes
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          HUSKY: 0
-        run: npx semantic-release
+          TAG: ${{ github.ref_name }}
+        run: |
+          VERSION="${TAG#v}"
+          awk -v version="$VERSION" '
+            /^##? / {
+              if (found) { exit }
+              if (index($0, "[" version "]") || index($0, " " version " ")) { found = 1; next }
+            }
+            found { print }
+          ' CHANGELOG.md > latest_changes.md
+          if [ -s latest_changes.md ]; then
+            echo "has_notes=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No changelog section found for $VERSION; falling back to generated notes"
+            echo "has_notes=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: ✅ Create GitHub Release
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          bodyFile: ${{ steps.extract_notes.outputs.has_notes == 'true' && 'latest_changes.md' || '' }}
+          generateReleaseNotes: ${{ steps.extract_notes.outputs.has_notes != 'true' }}
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-') }}

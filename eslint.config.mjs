@@ -1,136 +1,102 @@
-import eslintPluginJs from "@eslint/js";
-import eslintPluginJson from "@eslint/json";
-import eslintPluginMarkdown from "@eslint/markdown";
-import {configs as eslintPluginPackageJsonConfigs} from "eslint-plugin-package-json";
-import eslintPluginStylistic from "@stylistic/eslint-plugin";
+import css from "@eslint/css";
+import {defineConfig} from "eslint/config";
 import globals from "globals";
-import {flatConfigs as importConfigs} from "eslint-plugin-import-x";
+import {flatConfigs as importX} from "eslint-plugin-import-x";
+import js from "@eslint/js";
+import json from "@eslint/json";
+import markdown from "@eslint/markdown";
+import packageJson from "eslint-plugin-package-json";
+import stylistic from "@stylistic/eslint-plugin";
 
-const config = [
+export default defineConfig([
   {
-    "ignores": ["CHANGELOG.md", ".commitlintrc.json"]
-  },
-  eslintPluginJs.configs.all,
-  eslintPluginPackageJsonConfigs.recommended,
-  importConfigs.recommended,
-  ...eslintPluginMarkdown.configs.recommended,
-  {
-    "files": ["CHANGELOG.md"],
-    "rules": {
-      "markdown/heading-increment": "off"
-    }
-  },
-  {
-    "files": ["**/*.md"],
-    "language": "markdown/gfm",
-    "plugins": {
-      "markdown": eslintPluginMarkdown
+    files: ["**/*.css"],
+    languageOptions: {
+      tolerant: true
     },
-    "rules": {
-      "logical-assignment-operators": "off",
-      "markdown/no-missing-label-refs": "off",
-      "max-lines-per-function": "off",
-      "no-irregular-whitespace": "off"
+    plugins: {css},
+    language: "css/css",
+    extends: ["css/recommended"],
+    rules: {
+      "css/use-baseline": ["error", {available: "newly"}]
     }
   },
   {
-    "files": ["package.json"],
-    "rules": {
-      "package-json/valid-package-def": "off"
-    }
-  },
-  {
-    "files": ["**/*.json"],
-    "ignores": ["package.json", "package-lock.json"],
-    "language": "json/json",
-    ...eslintPluginJson.configs.recommended,
-    "rules": {
-      "logical-assignment-operators": "off",
-      "max-lines-per-function": "off",
-      "no-irregular-whitespace": "off"
-    }
-  },
-  {
-    "files": ["release.config.js"],
-    "rules": {
-      "no-template-curly-in-string": "off"
-    }
-  },
-  {
-    "files": ["**/*.js"],
-    "languageOptions": {
-      "ecmaVersion": "latest",
-      "globals": {
+    files: ["**/*.js", "**/*.mjs"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      globals: {
         ...globals.browser,
         ...globals.node
-      },
-      "sourceType": "commonjs"
+      }
     },
-    "plugins": {
-      ...eslintPluginStylistic.configs.all.plugins
-    },
-    "rules": {
-      ...eslintPluginStylistic.configs.all.rules,
+    extends: [importX.recommended, js.configs.all, stylistic.configs.all],
+    rules: {
       "@stylistic/array-element-newline": ["error", "consistent"],
       "@stylistic/dot-location": ["error", "property"],
       "@stylistic/function-call-argument-newline": ["error", "consistent"],
       "@stylistic/indent": ["error", 2],
       "@stylistic/lines-around-comment": "off",
       "@stylistic/multiline-comment-style": "off",
-      "@stylistic/no-multi-spaces": ["error", {"ignoreEOLComments": true}],
-      "@stylistic/object-property-newline": "off",
+      "@stylistic/no-multi-spaces": ["error", {ignoreEOLComments: true}],
+      "@stylistic/object-property-newline": ["error", {allowAllPropertiesOnSameLine: true}],
       "@stylistic/padded-blocks": ["error", "never"],
       "@stylistic/quote-props": ["error", "as-needed"],
       "capitalized-comments": "off",
-      "consistent-this": "off",
       "default-case": "off",
       "func-style": "off",
+      "import-x/no-unresolved": ["error", {ignore: ["eslint/config", "node_helper", "logger"]}],
       "init-declarations": "off",
-      "line-comment-position": "off",
-      "max-lines": "off",
-      "max-lines-per-function": "off",
-      "max-params": "off",
-      "max-statements": ["error", 40],
-      "multiline-comment-style": "off",
-      "no-await-in-loop": "off",
+      "max-lines": ["warn", 500],
+      "max-lines-per-function": ["warn", 100],
+      "max-params": ["warn", 4],
+      "max-statements": ["error", 25],
       "no-inline-comments": "off",
       "no-magic-numbers": "off",
       "no-ternary": "off",
-      "no-undef": "warn",
-      "one-var": "off",
+      "one-var": ["error", "never"],
       "prefer-destructuring": "off",
       "sort-keys": "off",
-      "strict": "off"
+      strict: "off"
     }
   },
   {
-    "files": ["**/*.mjs"],
-    "languageOptions": {
-      "ecmaVersion": "latest",
-      "globals": {
-        ...globals.node
-      },
-      "sourceType": "module"
-    },
-    "plugins": {
-      ...eslintPluginStylistic.configs.all.plugins
-    },
-    "rules": {
-      ...eslintPluginStylistic.configs.all.rules,
-      "@stylistic/array-element-newline": ["error", "consistent"],
-      "@stylistic/indent": ["error", 2],
-      "@stylistic/padded-blocks": ["error", "never"],
-      "func-style": "off",
-      "import-x/no-unresolved": "off",
-      "init-declarations": "off",
-      "max-lines-per-function": ["error", 100],
-      "max-statements": ["error", 25],
-      "no-magic-numbers": "off",
-      "no-ternary": "off",
-      "one-var": "off",
-      "prefer-destructuring": "off"
+    files: ["test/**/*.js"],
+    rules: {
+      "no-undefined": "off",
+      "max-lines": "off",
+      "max-lines-per-function": "off",
+      "require-await": "off",
+      "id-length": "off",
+      camelcase: ["error", {properties: "never"}],
+      "no-underscore-dangle": ["error", {allow: ["_load"]}],
+      "func-name-matching": "off",
+      "no-script-url": "off",
+      "no-promise-executor-return": "off"
+    }
+  },
+  {
+    files: ["**/*.json"],
+    ignores: ["package-lock.json"],
+    plugins: {json},
+    extends: ["json/recommended"],
+    language: "json/json"
+  },
+  {
+    files: ["package.json"],
+    plugins: {packageJson},
+    extends: ["packageJson/recommended"]
+  },
+  {
+    files: ["**/*.md"],
+    plugins: {markdown},
+    extends: ["markdown/recommended"],
+    language: "markdown/gfm",
+    rules: {
+      "markdown/no-missing-label-refs": [
+        "error",
+        {allowLabels: ["!TIP", "!IMPORTANT", "!NOTE", "!WARNING", "!CAUTION"]}
+      ]
     }
   }
-];
-
-export default config;
+]);

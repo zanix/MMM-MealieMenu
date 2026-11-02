@@ -25,11 +25,15 @@ Module.register("MMM-MealieMenu", {
     priorEntryLimit: 50,               // How many entries from previous days should be shown in total.
 
     // Look and Feel
+    template: "default",               // Layout: "default" | "mealie" (columns of days like Mealie, grouped by meal type).
+    fontSize: "small",                 // MagicMirror size class: "xsmall" | "small" | "medium" | "large" | "xlarge"
     fadePriorEntries: true,            // Fade previous days in the current week.
     showPictures: true,                // Show pictures corresponding to that days meal.
     roundPictureCorners: false,        // Round the meal picture corners.
     defaultPicture: "mealie.png",      // Default image to display for missing recipe images or meal notes.
+    groupByDay: false,                 // Group meals under a heading for each day.
     showDescription: false,            // Show the recipe/meal description.
+    showTodayLabel: true,              // Show a "Today" label for today's meals.
     dateFormat: "dddd",                // Display format for the date; uses moment.js format string.
     dateMealSeperator: " - ",          // Set the separator between the date and meal type.
     mealSortOrder: ["breakfast", "lunch", "dinner", "side"], // An array determining the order and visibility of the meal type headers.
@@ -53,65 +57,40 @@ Module.register("MMM-MealieMenu", {
     this.lastUpdate = 0; // Timestamp of the last module update. Set to 0 at start-up
 
     this.initialized = false;
+    this.loaded = false;
     this.error = null;
     this.formattedMenuData = null;
     this.dataRefreshTimestamp = null;
     this.dataRefreshDisplayTime = null;
 
-    // Validate host.
-    if (!this.config.host || !this.isValidURL(this.config.host)) {
-      Log.error(this.translate("ERROR_INVALID", {value: "host"}));
-      this.error = this.translate("ERROR_NO_HOST");
+    const {config, warnings, errors} = window.MealieMenuConfig.validate(this.config, this.defaults);
 
+    // Reload config with validated values so getTemplateData() can use them.
+    this.config = config;
+
+    // Log warnings to the console, but continue running with valid config values.
+    warnings.forEach((warning) => Log.warn(`${this.name}: ${warning}`));
+
+    // Log errors to the console and stop the module from running.
+    if (errors.length > 0) {
+      errors.forEach((error) => Log.error(`${this.name}: ${error.message}`));
+      this.error = errors[0].code;
       return;
     }
 
-    // Validate API key or username/password.
-    if (!this.config.apiKey) {
-      Log.info(this.translate("ERROR_INVALID", {value: "apiKey"}));
-      Log.info(this.translate("INFO_NO_APIKEY"));
-
-      if (!this.config.username) {
-        Log.error(this.translate("ERROR_INVALID", {value: "username"}));
-        this.error = this.translate("ERROR_NO_USER");
-
-        return;
-      } else if (!this.config.password) {
-        Log.error(this.translate("ERROR_INVALID", {value: "password"}));
-        this.error = this.translate("ERROR_NO_PASS");
-
-        return;
-      }
+    // Check for an external default image. Needs this.file to get the correct path to the module folder.
+    if (!this.config.defaultPicture.startsWith("http") && !this.config.defaultPicture.includes("/")) {
+      this.config.defaultPicture = this.file(this.config.defaultPicture);
     }
 
-    // Validate mealSortOrder.
-    if (!(
-      Array.isArray(this.config.mealSortOrder) &&
-      this.config.mealSortOrder.length > 0 &&
-      this.config.mealSortOrder.every((value) => this.defaults.mealSortOrder.includes(value))
-    )) {
-      Log.error(this.translate("ERROR_INVALID", {value: "mealSortOrder"}));
-      this.error = this.translate("ERROR_MEAL_SORT_ORDER");
-
-      return;
-    }
-
-    this.sanitzeConfig();
-
-    this.sendSocketNotification("MEALIE_INIT", {
-      identifier: this.identifier,
-      host: this.config.host,
-      apiKey: this.config.apiKey,
-      username: this.config.username,
-      password: this.config.password
-    });
+    this.sendSocketNotification("MEALIE_INIT", {identifier: this.identifier, config: this.config, defaults: this.defaults});
   },
 
   /**
    * Core method, called to request any additional scripts that need to be loaded.
    */
   getScripts () {
-    return ["moment.js"];
+    return [this.file("lib/config.js")];
   },
 
   /**
@@ -134,7 +113,7 @@ Module.register("MMM-MealieMenu", {
    * Core method, called to request the template file.
    */
   getTemplate () {
-    return "MMM-MealieMenu.njk";
+    return `templates/${this.config.template}.njk`;
   },
 
   /**
@@ -142,14 +121,12 @@ Module.register("MMM-MealieMenu", {
    */
   getTemplateData () {
     return {
-      phrases: {
-        loading: this.translate("LOADING"),
-        emptyMealPlan: this.translate("MEALIE_EMPTY_MEALPLAN")
-      },
-      hasError: Boolean(this.error),
-      error: this.error,
-      loading: this.formattedMenuData === null,
       config: this.config,
+      error: this.error,
+      errorText: this.error
+        ? this.translate(`ERROR_${this.error}`)
+        : "",
+      loaded: this.loaded,
       menu: this.formattedMenuData,
       identifier: this.identifier,
       timestamp: this.dataRefreshTimestamp,
@@ -175,16 +152,18 @@ Module.register("MMM-MealieMenu", {
           this.dataRefreshTimestamp = now.format("x");
           this.dataRefreshDisplayTime = now.format(this.config.displayLastUpdateFormat);
 
-          this.formattedMenuData = {meals: this.formatMeals(payload.meals)};
-
-          // Log.info(this.formattedMenuData);
+          this.formattedMenuData = this.buildMenu(this.formatMeals(payload.meals));
           this.error = null;
+          this.loaded = true;
+
           this.updateDom(this.config.animationSpeed);
 
           break;
 
         case "MEALIE_ERROR":
-          this.error = this.translate(payload.error);
+          Log.warn(`${this.name}: Backend reported ${payload.code}`);
+          this.error = payload.code;
+          this.loaded = true;
           this.formattedMenuData = null;
           this.updateDom(this.config.animationSpeed);
 
@@ -245,20 +224,8 @@ Module.register("MMM-MealieMenu", {
    * Call the node_Helper to fetch meal plan data from the API.
    */
   getData () {
-    this.sendSocketNotification("MEALIE_MENU_GET", {
-      identifier: this.identifier,
-      host: this.config.host,
-      apiKey: this.config.apiKey,
-      username: this.config.username,
-      password: this.config.password,
-      householdId: this.config.householdId,
-      groupId: this.config.groupId,
-      weekStartsOnMonday: this.config.weekStartsOnMonday,
-      currentWeek: this.config.currentWeek,
-      dayLimit: this.config.dayLimit,
-      priorDayLimit: this.config.priorDayLimit,
-      mealSortOrder: this.config.mealSortOrder
-    });
+    // The helper keeps the validated config from MEALIE_INIT.
+    this.sendSocketNotification("MEALIE_MENU_GET", {identifier: this.identifier});
   },
 
   /**
@@ -287,10 +254,11 @@ Module.register("MMM-MealieMenu", {
         name: meal.recipe?.name || meal.title,
         description: meal.recipe?.description || meal.text,
         rawDate: meal.date,
+        entryType: meal.entryType,
         date: moment(meal.date).format(this.config.dateFormat),
         meal: this.typeToMealDisplay(meal.entryType),
         photoUrl: meal.recipe?.id
-          ? `${this.config.host}/api/media/recipes/${meal.recipe.id}/images/min-original.webp`
+          ? `/${this.name}/image/${this.identifier}/${meal.recipe.id}`
           : "",
         isToday: today.isSame(meal.date),
         shouldFade: this.config.fadePriorEntries && today.isAfter(meal.date)
@@ -298,6 +266,42 @@ Module.register("MMM-MealieMenu", {
     }
 
     return this.filterDaysAndEntries(formatted);
+  },
+
+  /**
+   * Builds the menu data: the flat meal list and the same meals grouped by day.
+   */
+  buildMenu (meals) {
+    const days = [];
+    for (const meal of meals) {
+      const last = days.at(-1);
+      if (last && last.rawDate === meal.rawDate) {
+        last.meals.push(meal);
+      } else {
+        days.push({
+          rawDate: meal.rawDate,
+          date: meal.date,
+          isToday: meal.isToday,
+          shouldFade: meal.shouldFade,
+          meals: [meal],
+          groups: []
+        });
+      }
+    }
+
+    // Within each day, group the (already sorted) meals by meal type.
+    for (const day of days) {
+      for (const meal of day.meals) {
+        const group = day.groups.at(-1);
+        if (group && group.entryType === meal.entryType) {
+          group.meals.push(meal);
+        } else {
+          day.groups.push({entryType: meal.entryType, name: meal.meal, meals: [meal]});
+        }
+      }
+    }
+
+    return {meals, days};
   },
 
   /**
@@ -378,60 +382,5 @@ Module.register("MMM-MealieMenu", {
     }
 
     return value;
-  },
-
-  /**
-   * Assert values for configuration.
-   */
-  sanitzeConfig () {
-    // Strip trailing slashes.
-    this.config.host = this.config.host.replace(/\/$/u, "");
-
-    // Check for an external default image.
-    if (
-      !this.config.defaultPicture.startsWith("http") &&
-      !this.config.defaultPicture.includes("/")
-    ) {
-      this.config.defaultPicture = this.file(this.config.defaultPicture);
-    }
-
-    if (this.config.dayLimit < 0) {
-      this.config.dayLimit = 0;
-      Log.warn("dayLimit should be 0 or greater. Setting to 0.");
-    }
-
-    if (this.config.priorDayLimit < 0) {
-      this.config.priorDayLimit = 0;
-      Log.warn("priorDayLimit should be 0 or greater. Setting to 0.");
-    }
-
-    if (this.config.entryLimit < 0) {
-      this.config.entryLimit = 0;
-      Log.warn("entryLimit should be 0 or greater. Setting to 0.");
-    }
-
-    if (this.config.priorEntryLimit < 0) {
-      this.config.priorEntryLimit = 0;
-      Log.warn("priorEntryLimit should be 0 or greater. Setting to 0.");
-    }
-
-    if (this.config.updateInterval < 1) {
-      this.config.updateInterval = 1;
-      Log.warn("updateInterval should be 1 or greater. Setting to 1.");
-    }
-  },
-
-  /**
-   * Assert valid URL.
-   */
-  isValidURL (url) {
-    try {
-      // eslint-disable-next-line no-new
-      new URL(url);
-      return true;
-      // eslint-disable-next-line no-unused-vars
-    } catch (err) {
-      return false;
-    }
   }
 });

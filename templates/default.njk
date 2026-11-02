@@ -1,0 +1,64 @@
+{% macro mealEntry(meal, config, grouped) %}
+  <div class="entry{% if meal.isToday %} today{% elif meal.shouldFade %} fade{% endif %}">
+    {% if config.showPictures %}
+    <div class="entry-image">
+      <img src="{{ meal.photoUrl }}" {% if config.roundPictureCorners %}class="rounded"{% endif %} onerror="src='{{ config.defaultPicture }}'" />
+    </div>
+    {% endif %}
+    <div class="entry-text">
+      <div class="entry-header">
+        {% if not grouped %}
+        <span class="entry-date">{{ meal.date }}</span>
+        <span class="separator">{{ config.dateMealSeperator }}</span>
+        {% endif %}
+        <span class="type-name">{{ meal.meal }}</span>
+      </div>
+      <div class="entry-title">
+        {{ meal.name }}
+      </div>
+      {% if config.showDescription %}
+      <div class="entry-description">
+        {{ meal.description }}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+{% endmacro %}
+
+{% if error %}<div class="module-error xsmall">{{ errorText }}</div>{% endif %}
+{% if not loaded %}<div class="dimmed small">{{ 'LOADING' | translate }}</div>{% endif %}
+
+{% if loaded and not error %}
+<div class="default-theme {{ config.fontSize }}">
+  {# Group meals by day #}
+  {% if config.groupByDay %}
+  {% for day in menu.days %}
+  <div class="day{% if day.isToday %} today{% elif day.shouldFade %} fade{% endif %}">
+    <div class="day-header">{% if day.isToday and config.showTodayLabel %}{{ 'TODAY' | translate }}{% else %}{{ day.date }}{% endif %}</div>
+    {% for meal in day.meals %}
+    {{ mealEntry(meal, config, true) }}
+    {% endfor %}
+  </div>
+  {% endfor %}
+  {% else %}
+  {# List all meals without grouping #}
+  {% for meal in menu.meals %}
+  {{ mealEntry(meal, config, false) }}
+  {% endfor %}
+  {% endif %}
+
+  {% if menu.meals | length == 0 %}
+  <div class="module-empty">
+    {{ 'MEALIE_EMPTY_MEALPLAN' | translate }}
+  </div>
+  {% endif %}
+</div>
+
+<div class="meta-timestamp" id="{{ moduleTimestampIdPrefix + identifier }}" data-timestamp="{{ timestamp }}">
+  {% if config.displayLastUpdate %}
+  <div class="dimmed light xsmall">
+    {{ lastUpdated }}
+    </div>
+  {% endif %}
+</div>
+{% endif %}

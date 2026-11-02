@@ -1,87 +1,251 @@
-.MMM-MealieMenu * {
-  box-sizing: border-box;
+/*
+ * Variables. Override in css/custom.css, e.g. .MMM-MealieMenu { --mealiemenu-accent: #4caf50; }
+ * Theme specific variables are named --mealiemenu-<theme>-*.
+ */
+.MMM-MealieMenu {
+  /* Shared */
+  --mealiemenu-accent: #e58325;
+  --mealiemenu-error-color: #e5534b;
+  --mealiemenu-text-bright: #fff;
+  --mealiemenu-text-muted: #999;
+  --mealiemenu-border-color: #444;
+  --mealiemenu-fade-opacity: 0.33;
+  --mealiemenu-image-radius: 10%;
+
+  /* default theme */
+  --mealiemenu-default-today-color: #fff;
+  --mealiemenu-default-day-border-color: #666;
+  --mealiemenu-default-entry-divider: #222;
+  --mealiemenu-default-image-size: 45px;
+
+  /* mealie theme */
+  --mealiemenu-mealie-day-min-width: 14em;
+  --mealiemenu-mealie-day-header-border-width: 3px;
+  --mealiemenu-mealie-gap: 0.4em;
+  --mealiemenu-mealie-image-size: 2.5em;
 }
 
 .MMM-MealieMenu .module-content {
   width: 100%;
 }
 
-.MMM-MealieMenu .meal-items {
+.MMM-MealieMenu .module-error {
+  color: var(--mealiemenu-error-color);
+  font-size: 0.75em;
+}
+
+/* Shared by all templates */
+.MMM-MealieMenu .module-empty {
+  text-align: center;
+}
+
+/**
+ * "default" template (default-theme)
+ */
+.MMM-MealieMenu .default-theme {
   display: flex;
   flex-flow: column nowrap;
   place-content: normal;
 }
 
-.MMM-MealieMenu .meal-item {
+/* Meal Day group */
+.MMM-MealieMenu .default-theme .day {
+  display: flex;
+  flex-flow: column nowrap;
+  place-content: normal;
+  gap: 0.1em;
+}
+
+.MMM-MealieMenu .default-theme .day-header {
+  margin: 0.1em 0 0.1em;
+  padding: 0 0.3em;
+  text-align: left;
+  border-bottom: solid 1px var(--mealiemenu-default-day-border-color);
+  font-size: 0.8em;
+}
+
+.MMM-MealieMenu .default-theme .day.today .day-header {
+  color: var(--mealiemenu-default-today-color);
+}
+
+.MMM-MealieMenu .default-theme .day.fade {
+  opacity: var(--mealiemenu-fade-opacity);
+}
+/* Fix the fade of Meal entries */
+.MMM-MealieMenu .default-theme .day .entry.fade {
+  opacity: 1;
+}
+
+/* Meal entry */
+.MMM-MealieMenu .default-theme .entry {
   display: grid;
   grid: min-content max-content / min-content;
-  grid-template-areas: "meal-image meal-info";
-  gap: 0 5px;
-  border-bottom: solid 1px #222;
-  margin: 3px 0 2px;
-  padding: 0 5px;
+  grid-template-areas: "entry-image info";
+  gap: 0 0.3em;
+  border-bottom: solid 1px var(--mealiemenu-default-entry-divider);
+  margin-top: 0.2em;
+  padding: 0 0.3em;
+}
+.MMM-MealieMenu .default-theme .entry:last-child {
+  border-bottom: none;
 }
 
-.MMM-MealieMenu .meal-item.fade {
-  opacity: 0.33;
+.MMM-MealieMenu .default-theme .entry.fade {
+  opacity: var(--mealiemenu-fade-opacity);
 }
 
-.MMM-MealieMenu .meal-image {
-  grid-area: meal-image;
+.MMM-MealieMenu .default-theme .entry-image {
+  grid-area: entry-image;
 }
 
-.MMM-MealieMenu .meal-image > img {
-  width: 45px;
-  height: 45px;
+.MMM-MealieMenu .default-theme .entry-image > img {
+  width: var(--mealiemenu-default-image-size);
+  height: var(--mealiemenu-default-image-size);
 }
 
-.MMM-MealieMenu .meal-image > img.rounded {
-  border-radius: 10%;
+.MMM-MealieMenu .default-theme .entry-image > img.rounded {
+  border-radius: var(--mealiemenu-image-radius);
 }
 
-.MMM-MealieMenu .meal-info {
+.MMM-MealieMenu .default-theme .entry-text {
   display: grid;
   grid: min-content min-content / auto;
   grid-template-areas:
-    "meal-header"
-    "meal-name"
-    "meal-description";
+    "entry-header"
+    "entry-title"
+    "entry-description";
   gap: 0;
-  grid-area: meal-info;
+  grid-area: info;
   text-align: left;
-  line-height: 24px;
+  line-height: 1.2em;
 }
 
-.MMM-MealieMenu .meal-header {
-  grid-area: meal-header;
-  font-size: var(--font-size-xsmall);
+.MMM-MealieMenu .default-theme .entry-header {
+  grid-area: entry-header;
+  font-size: 0.65em;
 }
 
-.MMM-MealieMenu .meal-name {
-  grid-area: meal-name;
-  font-size: var(--font-size-small);
+.MMM-MealieMenu .default-theme .entry-title {
+  grid-area: entry-title;
+  font-size: 0.9em;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
 }
 
-.MMM-MealieMenu .meal-description {
-  grid-area: meal-description;
-  font-size: var(--font-size-xsmall);
+.MMM-MealieMenu .default-theme .entry-description {
+  grid-area: entry-description;
+  font-size: 0.65em;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
 }
 
-.MMM-MealieMenu .meal-item.today .meal-header {
-  font-size: calc(var(--font-size-small) - 0.1rem);
+/* "Today" styles */
+.MMM-MealieMenu .default-theme .entry.today .entry-header {
+  font-size: 0.75em;
 }
 
-.MMM-MealieMenu .meal-item.today .meal-name {
-  color: #fff;
-  font-size: calc(var(--font-size-medium) - 0.3rem);
+.MMM-MealieMenu .default-theme .entry.today .entry-title {
+  color: var(--mealiemenu-default-today-color);
+  font-size: 1em;
+}
+.MMM-MealieMenu .default-theme .entry.today .entry-description {
+  font-size: 0.75em;
 }
 
-.MMM-MealieMenu .meal-empty {
-  text-align: center;
+/**
+ * "mealie" template (mealie-theme): days as cards grouped by meal type, like Mealie.
+ */
+.MMM-MealieMenu .mealie-theme {
+  container-type: inline-size;
+}
+
+/* Narrow cards: days stack as rows. */
+.MMM-MealieMenu .mealie-theme .days {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--mealiemenu-mealie-gap);
+  text-align: left;
+}
+
+/* Wide cards: days tile as columns. */
+@container (min-width: 400px) {
+  .MMM-MealieMenu .mealie-theme .days {
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(var(--mealiemenu-mealie-day-min-width), 1fr)
+    );
+  }
+}
+
+.MMM-MealieMenu .mealie-theme .day {
+  min-width: 0;
+  background: transparent;
+}
+
+.MMM-MealieMenu .mealie-theme .day.fade {
+  opacity: var(--mealiemenu-fade-opacity);
+}
+
+.MMM-MealieMenu .mealie-theme .day-header {
+  border-left: solid var(--mealiemenu-mealie-day-header-border-width)
+    var(--mealiemenu-border-color);
+  font-size: 0.8em;
+  font-weight: bold;
+  padding: 0.2em 0.4em;
+}
+
+.MMM-MealieMenu .mealie-theme .day.today .day-header {
+  border-color: var(--mealiemenu-accent);
+  color: var(--mealiemenu-accent);
+}
+
+.MMM-MealieMenu .mealie-theme .type-group {
+  margin-top: 0.2em;
+  margin-left: 0.3em;
+}
+
+.MMM-MealieMenu .mealie-theme .type-name {
+  font-size: 0.75em;
+  letter-spacing: 0.05em;
+  color: var(--mealiemenu-text-muted);
+}
+
+.MMM-MealieMenu .mealie-theme .entry {
+  display: flex;
+  align-items: center;
+  gap: var(--mealiemenu-mealie-gap);
+  margin-top: 0.15em;
+}
+
+.MMM-MealieMenu .mealie-theme .entry-image {
+  flex: none;
+  width: var(--mealiemenu-mealie-image-size);
+  height: var(--mealiemenu-mealie-image-size);
+  object-fit: cover;
+}
+
+.MMM-MealieMenu .mealie-theme .entry-image.rounded {
+  border-radius: var(--mealiemenu-image-radius);
+}
+
+.MMM-MealieMenu .mealie-theme .entry-text {
+  min-width: 0;
+  line-height: 1.2em;
+}
+
+.MMM-MealieMenu .mealie-theme .entry-title {
+  font-size: 0.9em;
+  color: var(--mealiemenu-text-bright);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.MMM-MealieMenu .mealie-theme .entry-description {
+  font-size: 0.65em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

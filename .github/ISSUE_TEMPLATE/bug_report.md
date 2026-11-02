@@ -30,7 +30,7 @@ assignees: ""
    If you are using a dumb terminal and cannot open the front-end dev console with a keyboard, you can manually execute the MagicMirror in dev mode. (If you are using PM2, you should stop that first.)
 
    ```shell
-   npm run start:dev
+   node --run start:dev
    ```
 
 4. Create a detailed report
