@@ -20,6 +20,10 @@ Mealie is an intuitive and easy to use recipe management app. It's designed to m
 
 Mealie is self-hostable, meaning you can run it on your own server without any reliance on cloud-services.
 
+## AI Disclosure
+
+This project has been assisted by AI tools. The AI was used to help write and edit documentation, generate code snippets, and provide suggestions for improving the codebase. All contributions made by AI have been reviewed and verified by myself to ensure accuracy and quality.
+
 ## Table of Contents
 
 - [Screenshots](#screenshots)
