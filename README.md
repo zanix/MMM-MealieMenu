@@ -128,7 +128,7 @@ Mealie requires an API key for authentication. You can generate a key by going t
 | `template`                      | <p>Layout of the module; see [Templates](#templates).</p><p>**Type:** `string`<br>**Possible values:** `"default"` and `"mealie"`<br>**Default value:** `"default"`</p> |
 | `fontSize`                      | <p>Base font size of the module. All other sizes (`em`) scale from it, using MagicMirror's size classes</p><p>**Type:** `string`<br>**Possible values:** `"xsmall"`, `"small"`, `"medium"`, `"large"`, `"xlarge"`<br>**Default value:** `small`</p> |
 | `animationSpeed`                | <p>Speed of the update animation.</p><p>**Type:** `integer`<br>**Possible values:** `0` - `5000`<br>**Default value:** `500`<br>**Unit:** `milliseconds`</p> |
-| `displayLastUpdate`             | <p>Display the last update time at the end of the meal plan list.</p><p>**Type:** `boolean`<br>**Default value:** `true`<br>**Possible values:** `true`, `false`</p> |
+| `displayLastUpdate`             | <p>Display the last update time at the end of the meal plan list.</p><p>**Type:** `boolean`<br>**Default value:** `false`<br>**Possible values:** `true`, `false`</p> |
 | `displayLastUpdateFormat`       | <p>Format to use for the time display if `displayLastUpdate:true`; uses [moment.js format string][moment-format-link]</p><p>**Type:** `string`<br>**Example:** `'HH:mm:ss'`<br>**Default value:** `'MMM D - h:mm:ss a'`</p> |
 <!-- markdownlint-enable MD033 MD060 -->
 <!-- prettier-ignore-end -->
