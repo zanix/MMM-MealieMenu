@@ -112,7 +112,7 @@ describe("MMM-MealieMenu front end", () => {
       assert.equal(first.name, "Simple & Easy Freezer Breakfast Burritos");
       assert.equal(first.meal, "Breakfast");
       assert.equal(first.date, "Sunday");
-      assert.equal(first.photoUrl, `/MMM-MealieMenu/image/${mod.identifier}/${fixture.items[1].recipeId}`);
+      assert.equal(first.photoUrl, `/MMM-MealieMenu/image/${mod.identifier}/${fixture.items[1].recipeId}?v=${fixture.items[1].recipe.image}`);
     });
 
     it("uses the title and text for notes without a recipe", () => {

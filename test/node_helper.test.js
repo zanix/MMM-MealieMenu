@@ -173,10 +173,10 @@ describe("node_helper", () => {
       };
       return res;
     };
-    const call = async (params, getRecipeImage) => {
+    const call = async (params, getRecipeImage, query = {}) => {
       helper.instances.set("id1", {client: {getRecipeImage}, config: baseConfig});
       const res = makeRes();
-      await helper.serveImage({params}, res);
+      await helper.serveImage({params, query}, res);
       return res;
     };
 
@@ -193,6 +193,20 @@ describe("node_helper", () => {
       assert.equal(res.status, 200);
       assert.equal(res.body, body);
       assert.equal(res.headers["Content-Type"], "image/webp");
+    });
+
+    it("caches long-term only when the image version is in the URL", async () => {
+      const image = async () => ({body: Buffer.from("img"), contentType: "image/webp"});
+      const params = {identifier: "id1", recipeId: "abc"};
+      let received;
+      await call(params, async (...args) => {
+        received = args;
+        return image();
+      }, {v: "f0TU"});
+      assert.deepEqual(received, ["abc", "f0TU"]);
+      assert.equal((await call(params, image, {v: "f0TU"})).headers["Cache-Control"], "private, max-age=31536000, immutable");
+      assert.equal((await call(params, image)).headers["Cache-Control"], "private, no-cache");
+      assert.equal((await call(params, image, {v: "../x"})).headers["Cache-Control"], "private, no-cache");
     });
 
     it("rejects unknown instances and unsafe recipe ids", async () => {

@@ -124,9 +124,20 @@ module.exports = NodeHelper.create({
       return;
     }
 
+    const version = (/^[\w-]{1,64}$/u).test(req.query?.v ?? "")
+      ? req.query.v
+      : "";
+
     try {
-      const {body, contentType} = await instance.client.getRecipeImage(recipeId);
-      res.set({"Content-Type": contentType, "Cache-Control": "public, max-age=86400", "X-Content-Type-Options": "nosniff"});
+      const {body, contentType} = await instance.client.getRecipeImage(recipeId, version);
+      // The version in the URL changes with the image, so a versioned response can be cached long-term.
+      res.set({
+        "Content-Type": contentType,
+        "Cache-Control": version
+          ? "private, max-age=31536000, immutable"
+          : "private, no-cache",
+        "X-Content-Type-Options": "nosniff"
+      });
       res.send(body);
     } catch (error) {
       Log.warn(`Image ${recipeId} failed: ${error.message}`);

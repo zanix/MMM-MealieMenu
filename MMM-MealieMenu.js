@@ -258,7 +258,9 @@ Module.register("MMM-MealieMenu", {
         date: moment(meal.date).format(this.config.dateFormat),
         meal: this.typeToMealDisplay(meal.entryType),
         photoUrl: meal.recipe?.id
-          ? `/${this.name}/image/${this.identifier}/${meal.recipe.id}`
+          ? `${globalThis.config?.basePath || "/"}${this.name}/image/${this.identifier}/${meal.recipe.id}${meal.recipe.image
+            ? `?v=${encodeURIComponent(meal.recipe.image)}`
+            : ""}`
           : "",
         isToday: today.isSame(meal.date),
         shouldFade: this.config.fadePriorEntries && today.isAfter(meal.date)

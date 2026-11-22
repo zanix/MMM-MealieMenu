@@ -208,6 +208,12 @@ describe("MealieClient", () => {
       assert.equal(requests.at(-1).headers.authorization, undefined);
     });
 
+    it("passes the image version as a query parameter", async () => {
+      behavior["/api/media/recipes/r1/images/min-original.webp"] = (req, res) => res.end("x");
+      await make({host, apiKey: "key"}).getRecipeImage("r1", "f0TU");
+      assert.equal(requests.at(-1).query.get("version"), "f0TU");
+    });
+
     it("rejects with the status when missing", async () => {
       await assert.rejects(make({host, apiKey: "key"}).getRecipeImage("none"), {status: 404});
     });
