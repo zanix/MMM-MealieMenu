@@ -69,6 +69,6 @@
     "simple-git-hooks": "^2.14.0"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=22.14.0"
   }
 }

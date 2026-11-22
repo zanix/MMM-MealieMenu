@@ -1,7 +1,7 @@
 /* global Module, Log, moment */
 
 Module.register("MMM-MealieMenu", {
-  requiresVersion: "2.2.0",
+  requiresVersion: "2.31.0",
 
   /**
    * These are module defaults and should not be edited here.

@@ -59,7 +59,7 @@ This project has been assisted by AI tools. The AI was used to help write and ed
 
 ## Requirements
 
-- MagicMirror² 2.22.0 or newer (`node_helper.js` relies on Node.js 18+ and its built-in `fetch`)
+- MagicMirror² 2.31.0 or newer (requires Node.js 22.14.0 or newer)
 - A [Mealie][mealie-io-link] server.
 
 ## Installation
@@ -69,6 +69,12 @@ Just clone `MMM-MealieMenu` into the modules folder of your MagicMirror² instal
 ```bash
 cd ~/MagicMirror/modules
 git clone https://github.com/zanix/MMM-MealieMenu
+```
+
+Then install the dependencies:
+
+```bash
+cd MMM-MealieMenu
 npm install --omit=dev
 ```
 
