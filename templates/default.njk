@@ -8,7 +8,7 @@
     <div class="entry-text">
       <div class="entry-header">
         {% if not grouped %}
-        <span class="entry-date">{{ meal.date }}</span>
+        <span class="entry-date">{% if meal.isToday and config.showTodayLabel %}{{ 'TODAY' | translate }}{% else %}{{ meal.date }}{% endif %}</span>
         <span class="separator">{{ config.dateMealSeperator }}</span>
         {% endif %}
         <span class="type-name">{{ meal.meal }}</span>

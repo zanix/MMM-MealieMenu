@@ -159,6 +159,7 @@
  */
 .MMM-MealieMenu .mealie-theme {
   container-type: inline-size;
+  contain-intrinsic-inline-size: var(--mealiemenu-mealie-day-min-width);
 }
 
 /* Narrow cards: days stack as rows. */
