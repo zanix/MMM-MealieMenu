@@ -8,9 +8,9 @@ Hello and thank you for wanting to contribute to MMM-MealieMenu!
      - If so, reference the issue like this `Fixes #<issue_number>`
    - What does the pull request accomplish? Use a list if needed.
    - If it includes major visual changes please add screenshots.
-2. Please run `npm run lint:fix` before submitting so that style issues are fixed.
-3. Ensure your commit messages match Angular's [commit message guidelines](https://github.com/angular/angular/blob/master/CONTRIBUTING.md#commit)
-   - This is so [semantic-release](https://github.com/semantic-release/semantic-release) can auto-generate `CHANGELOG.md` and release notes.
+2. Please run `node --run lint:fix` before submitting so that style issues are fixed.
+3. Ensure your commit messages match the [conventionalcommits.org](https://www.conventionalcommits.org/) specification
+   - This is so [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) can auto-generate `CHANGELOG.md` and release notes.
 
 > [!NOTE]
 > It is highly recommended that you update your `main` branch before creating a pull request. This makes merging your pull request easier.

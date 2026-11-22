@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "host": {
+      "type": "string",
+      "description": "URL of your Mealie instance, e.g. https://mealie.yourdomain.com (required)"
+    },
+    "apiKey": {
+      "type": "string",
+      "description": "Mealie API key (required unless username and password are set)"
+    },
+    "username": {
+      "type": "string",
+      "description": "Mealie username or email (used when no apiKey is set)"
+    },
+    "password": {
+      "type": "string",
+      "description": "Mealie password (used when no apiKey is set)"
+    },
+    "householdId": {
+      "type": "string",
+      "description": "Household ID (UUID) of the meal plan; blank uses the default household"
+    },
+    "groupId": {
+      "type": "string",
+      "description": "Group ID (UUID) of the meal plan; blank uses the default group"
+    },
+    "currentWeek": {
+      "type": "boolean",
+      "default": true,
+      "description": "Only show meals for the current week"
+    },
+    "weekStartsOnMonday": {
+      "type": "boolean",
+      "default": false,
+      "description": "Use Monday as the first day of the week (only with currentWeek)"
+    },
+    "dayLimit": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 365,
+      "default": 7,
+      "description": "Number of days to show after today"
+    },
+    "priorDayLimit": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 365,
+      "default": 2,
+      "description": "Number of previous days to show"
+    },
+    "entryLimit": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000,
+      "default": 50,
+      "description": "Maximum number of entries from today and future days"
+    },
+    "priorEntryLimit": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000,
+      "default": 50,
+      "description": "Maximum number of entries from previous days"
+    },
+    "template": {
+      "type": "string",
+      "enum": ["default", "mealie"],
+      "default": "default",
+      "description": "Layout: default (list) or mealie (day columns grouped by meal type)"
+    },
+    "fontSize": {
+      "type": "string",
+      "enum": ["xsmall", "small", "medium", "large", "xlarge"],
+      "default": "small",
+      "description": "Base font size of the module"
+    },
+    "fadePriorEntries": {
+      "type": "boolean",
+      "default": true,
+      "description": "Fade previous days in the current week"
+    },
+    "showPictures": {
+      "type": "boolean",
+      "default": true,
+      "description": "Show recipe pictures"
+    },
+    "roundPictureCorners": {
+      "type": "boolean",
+      "default": false,
+      "description": "Round the picture corners"
+    },
+    "defaultPicture": {
+      "type": "string",
+      "default": "mealie.png",
+      "description": "Picture for missing recipe images or meal notes: a URL, a path, or a file in the module folder"
+    },
+    "groupByDay": {
+      "type": "boolean",
+      "default": false,
+      "description": "Group meals under a heading for each day (default template)"
+    },
+    "showDescription": {
+      "type": "boolean",
+      "default": false,
+      "description": "Show the recipe description or meal note"
+    },
+    "showTodayLabel": {
+      "type": "boolean",
+      "default": true,
+      "description": "Show \"Today\" instead of the day name for today's meals"
+    },
+    "dateFormat": {
+      "type": "string",
+      "default": "dddd",
+      "description": "Moment.js format for the date, e.g. ddd DD"
+    },
+    "dateMealSeperator": {
+      "type": "string",
+      "default": " - ",
+      "description": "Text between the date and the meal type (default template)"
+    },
+    "mealSortOrder": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["breakfast", "lunch", "dinner", "side"]
+      },
+      "default": ["breakfast", "lunch", "dinner", "side"],
+      "description": "Order and visibility of meal types"
+    },
+    "mealTypeName": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "default": {},
+      "description": "Custom display names for meal types, e.g. { \"side\": \"Meal Prep\" }"
+    },
+    "updateInterval": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 86400,
+      "default": 3600,
+      "description": "How often to update the meal plan, in seconds"
+    },
+    "animationSpeed": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 5000,
+      "default": 500,
+      "description": "Speed of the update animation, in milliseconds"
+    },
+    "displayLastUpdate": {
+      "type": "boolean",
+      "default": false,
+      "description": "Show the last update time after the meals"
+    },
+    "displayLastUpdateFormat": {
+      "type": "string",
+      "default": "MMM D - h:mm:ss a",
+      "description": "Moment.js format for the last update time"
+    }
+  }
+}
