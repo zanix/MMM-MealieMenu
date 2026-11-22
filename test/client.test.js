@@ -197,7 +197,7 @@ describe("MealieClient", () => {
   });
 
   describe("getRecipeImage", () => {
-    it("returns the bytes and content type using the token", async () => {
+    it("returns the bytes and content type without sending credentials", async () => {
       behavior["/api/media/recipes/r1/images/min-original.webp"] = (req, res) => {
         res.setHeader("content-type", "image/webp");
         res.end(Buffer.from("RIFF"));
@@ -205,7 +205,7 @@ describe("MealieClient", () => {
       const image = await make({host, apiKey: "key"}).getRecipeImage("r1");
       assert.equal(image.body.toString(), "RIFF");
       assert.equal(image.contentType, "image/webp");
-      assert.equal(requests.at(-1).headers.authorization, "Bearer key");
+      assert.equal(requests.at(-1).headers.authorization, undefined);
     });
 
     it("rejects with the status when missing", async () => {
