@@ -1,3 +1,96 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
+
+## [2.0.0](https://github.com/zanix/MMM-MealieMenu/compare/v1.7.0...v2.0.0) (2026-11-22)
+
+### Added
+
+* add "mealie" template, CSS variables, and rework default template ([4532c2b](https://github.com/zanix/MMM-MealieMenu/commit/4532c2b3b24098ec303d50dc74476e4ef1ae860d)), closes [#7](https://github.com/zanix/MMM-MealieMenu/issues/7)
+* add configuration schema and test ([d600b46](https://github.com/zanix/MMM-MealieMenu/commit/d600b46539d6a1fa125411d17ebdb0bcb08dde33))
+* add fontSize option and validation ([0044d63](https://github.com/zanix/MMM-MealieMenu/commit/0044d632a61a1d858060986fe1f6c1d14bfb18d8))
+* add MealieClient and refactor node_helper to per-instance clients ([9c01422](https://github.com/zanix/MMM-MealieMenu/commit/9c01422ae3d1bb4cd6bee114a4d09b64f4b3cc05))
+* add option to group meals by day ([853ac99](https://github.com/zanix/MMM-MealieMenu/commit/853ac9968fb950bbeaa2664976d45f4bec315079)), closes [#165](https://github.com/zanix/MMM-MealieMenu/issues/165)
+* add showTodayLabel option to toggle "Today" header ([018278a](https://github.com/zanix/MMM-MealieMenu/commit/018278aafd9a3661259587ad7b6d041789bf4f67))
+* **config:** add config validation module and refactor init/error flow ([4656a28](https://github.com/zanix/MMM-MealieMenu/commit/4656a28b70720f5dc7844ee2e285c9dec555144f))
+* **images:** support recipe image version and caching ([747a92c](https://github.com/zanix/MMM-MealieMenu/commit/747a92c82de1aa19ab559e9916c2de59defb4730))
+* proxy recipe images ([fc87125](https://github.com/zanix/MMM-MealieMenu/commit/fc871256edc7ce54d5350fbab2ac34d2eeb97447))
+
+### Fixed
+
+* **client:** don't send credentials for recipe images ([70cdc41](https://github.com/zanix/MMM-MealieMenu/commit/70cdc41840f2c91efe5b19afa61eb89be429a408))
+* **config:** remove 256-character limit from TOKEN regex ([d880169](https://github.com/zanix/MMM-MealieMenu/commit/d880169f025b833898addced454a8252a8c45271))
+* correct week range calculation; update styles and docs ([f77c2eb](https://github.com/zanix/MMM-MealieMenu/commit/f77c2eb73562f9bc726c4e4532dc96ddd19654d6))
+* load moment ([6b13eb9](https://github.com/zanix/MMM-MealieMenu/commit/6b13eb9a64148dd4676d796c5baecec9df440833))
+* remove moment-with-locales client script import ([969da62](https://github.com/zanix/MMM-MealieMenu/commit/969da626589c65b54c9081c6b63384b6f8c8d11b))
+* show TODAY label for current day and fix collapse ([5e6d601](https://github.com/zanix/MMM-MealieMenu/commit/5e6d601031a4bad567ce05f79f452e0747ac6c5f))
+
+### Documentation
+
+* add AI disclosure to README ([cb87dd1](https://github.com/zanix/MMM-MealieMenu/commit/cb87dd1813beba82220f90db6e44fec69a6cfc6b))
+* displayLastUpdate default is false ([21baaf6](https://github.com/zanix/MMM-MealieMenu/commit/21baaf65e20bafea78704137f09e07d8063f15cb))
+* move screenshots, add screenshot ([86d06d5](https://github.com/zanix/MMM-MealieMenu/commit/86d06d51f418e28eb89cfe1759f224c52950f4e4))
+* **security:** update supported versions in SECURITY.md ([c875bd4](https://github.com/zanix/MMM-MealieMenu/commit/c875bd4853dde5543228879dad07482b37e7a493))
+* update contributing, PR template, and normalize changelog ([45c0495](https://github.com/zanix/MMM-MealieMenu/commit/45c049532dbff083fbdafbf2738e75d0431dad1d))
+* update for commit-and-tag-release ([58f3955](https://github.com/zanix/MMM-MealieMenu/commit/58f39552e07d20720ed848c9bf8f8b3c767d9f9f))
+* update for commit-and-tag-release ([5b40bbd](https://github.com/zanix/MMM-MealieMenu/commit/5b40bbd8833bc0221f0cadb78ca35423dfa99b36))
+* update templates, README, SECURITY, add Code of Conduct ([6edbe64](https://github.com/zanix/MMM-MealieMenu/commit/6edbe649daebc5763d05c855de08a779cf25fb0e))
+
+### Chores
+
+* change package.json, fix client log, update README ([36ae79c](https://github.com/zanix/MMM-MealieMenu/commit/36ae79cce4e15488878f363698c1e3e633c0d856))
+* **deps-dev:** bump @commitlint/config-conventional ([479046f](https://github.com/zanix/MMM-MealieMenu/commit/479046fd5890dffe8298f134f84581a2b8128aa9))
+* **deps-dev:** bump @eslint/js from 9.17.0 to 9.20.0 ([2ff5c1a](https://github.com/zanix/MMM-MealieMenu/commit/2ff5c1a8eae9b3cd95d076780e3740c6c2a33ea8))
+* **deps-dev:** bump @eslint/json from 0.11.0 to 0.12.0 ([9729d7d](https://github.com/zanix/MMM-MealieMenu/commit/9729d7ddf183f492b4ed28a64dcaf26062c25770))
+* **deps-dev:** bump @eslint/json from 0.12.0 to 0.13.2 ([7e34be9](https://github.com/zanix/MMM-MealieMenu/commit/7e34be92aaedbb207d8f17f4f1676284aac78d84))
+* **deps-dev:** bump @eslint/json from 0.9.0 to 0.11.0 ([c94a655](https://github.com/zanix/MMM-MealieMenu/commit/c94a6550b3318b34fad09892214461e267c47fed))
+* **deps-dev:** bump @eslint/markdown from 6.2.1 to 6.3.0 ([204c3ac](https://github.com/zanix/MMM-MealieMenu/commit/204c3ac0b9154894e25dec479077624ad38e8688))
+* **deps-dev:** bump @eslint/markdown from 6.3.0 to 6.6.0 ([6673d42](https://github.com/zanix/MMM-MealieMenu/commit/6673d42acd34a1bb3b734b2e81d267392f8bf152))
+* **deps-dev:** bump @eslint/markdown from 6.6.0 to 7.2.0 ([c36c7e2](https://github.com/zanix/MMM-MealieMenu/commit/c36c7e2c04c2acbb636a1237a7d55462d5dfbcab))
+* **deps-dev:** bump @stylistic/eslint-plugin from 4.2.0 to 5.3.1 ([e954b9d](https://github.com/zanix/MMM-MealieMenu/commit/e954b9dfbf22da1f13e32e3732de4d06beae6f73))
+* **deps-dev:** bump eslint from 9.17.0 to 9.20.0 ([087520e](https://github.com/zanix/MMM-MealieMenu/commit/087520efc4163e4b26ef49717fff3b1d4852c5db))
+* **deps-dev:** bump eslint-plugin-import-x from 4.10.3 to 4.16.1 ([2cf37df](https://github.com/zanix/MMM-MealieMenu/commit/2cf37dffe63da969469b205ffedfce2b740e4ffa))
+* **deps-dev:** bump eslint-plugin-package-json from 0.19.0 to 0.29.0 ([fc4aef2](https://github.com/zanix/MMM-MealieMenu/commit/fc4aef20a5a64895a964e4f58882626f36373f81))
+* **deps-dev:** bump globals from 16.0.0 to 16.3.0 ([306b2ad](https://github.com/zanix/MMM-MealieMenu/commit/306b2ad1e9ee2a4683c94333ac374f49bdf53662))
+* **deps-dev:** bump lint-staged from 15.3.0 to 15.5.0 ([a05765b](https://github.com/zanix/MMM-MealieMenu/commit/a05765bd91bf1ffd36a70ee2a53dd53c55533ba5))
+* **deps-dev:** bump lint-staged from 15.5.1 to 16.2.3 ([e7c3f47](https://github.com/zanix/MMM-MealieMenu/commit/e7c3f47e379b0f9d325fb44f6501451994937513))
+* **deps-dev:** bump prettier from 3.5.3 to 3.6.2 ([9acc049](https://github.com/zanix/MMM-MealieMenu/commit/9acc0497b835bfc19527087a23957a8639ae2a7f))
+* **deps-dev:** bump semantic-release from 24.1.0 to 24.2.6 ([0b4439f](https://github.com/zanix/MMM-MealieMenu/commit/0b4439f97ca7dd1fd59893fcaaca4e6fe1e94003))
+* **deps-dev:** bump semantic-release from 24.2.6 to 24.2.7 ([fddf738](https://github.com/zanix/MMM-MealieMenu/commit/fddf73840411811c6bcd19522de43e89290f01e3))
+* **deps-dev:** bump stylelint from 16.12.0 to 16.14.1 ([50226f4](https://github.com/zanix/MMM-MealieMenu/commit/50226f4521d922589473d7e865f3741e57b06ff1))
+* **deps-dev:** bump stylelint from 16.18.0 to 16.21.0 ([d05b787](https://github.com/zanix/MMM-MealieMenu/commit/d05b787620e7d5062a2c7a94432e491a9cca14ea))
+* **deps-dev:** bump stylelint from 16.23.0 to 16.24.0 ([e5615e0](https://github.com/zanix/MMM-MealieMenu/commit/e5615e09b5ef48f03e2383ae19c3ad26ff345a0d))
+* **deps-dev:** bump stylelint-config-standard from 38.0.0 to 39.0.0 ([fd0aba7](https://github.com/zanix/MMM-MealieMenu/commit/fd0aba7e5f24312909a3052dc15910550c6a8c71))
+* **deps-dev:** update dev dependencies ([a8b6138](https://github.com/zanix/MMM-MealieMenu/commit/a8b61386ec16415bc264f79ba53b507b690de7f1))
+* **deps:** add moment explicitly ([c491d65](https://github.com/zanix/MMM-MealieMenu/commit/c491d65f48bceed97a8e07a52fc367047aa66bbc))
+* **deps:** bump actions/checkout from 4 to 5 ([6e526de](https://github.com/zanix/MMM-MealieMenu/commit/6e526de292375a0dc8d1e5a9d4c666f74e790cad))
+* **deps:** bump actions/setup-node from 4 to 6 ([f1cab95](https://github.com/zanix/MMM-MealieMenu/commit/f1cab959470fdb6300cae8383de538ea1c05fcc0))
+* **deps:** bump devDependencies eslint, eslint-plugin-package-json, globals ([2b5929c](https://github.com/zanix/MMM-MealieMenu/commit/2b5929c9a922047c98bb96211475a8cfae3fc9a5))
+* **deps:** fix keywords and bump dependencies ([dbe17f4](https://github.com/zanix/MMM-MealieMenu/commit/dbe17f41c9ba517d2d6649e72e1d34128d2c9028))
+* **deps:** replace dev dependencies ([eb714ed](https://github.com/zanix/MMM-MealieMenu/commit/eb714edc32b0281a10e35bc36e76b05198577474))
+* **deps:** update linting dependencies and rules ([1091c81](https://github.com/zanix/MMM-MealieMenu/commit/1091c819bb96482be4db8ea3aa61e76be6420351))
+* **deps:** upgrade devDependencies ([7a3d587](https://github.com/zanix/MMM-MealieMenu/commit/7a3d587a986199fad7d5f9aa04c48b257b3cc893))
+* fix eslint config ([72c1e39](https://github.com/zanix/MMM-MealieMenu/commit/72c1e3901f7bd2b038e936673a561d218d8b9ef2))
+* fix lint script ([aad9c68](https://github.com/zanix/MMM-MealieMenu/commit/aad9c6824c415b8df5bd7995874bb004d274e726))
+* **lint:** add ESLint ignores and tidy code ([6604260](https://github.com/zanix/MMM-MealieMenu/commit/660426070294a1ebf93fda924c9a5e43fd33de2e))
+* move governance files into .github directory ([de2198b](https://github.com/zanix/MMM-MealieMenu/commit/de2198b6f0e7983f566a8634d8e6216e542fb546))
+* remove .versionrc.json and client version ([609c2a7](https://github.com/zanix/MMM-MealieMenu/commit/609c2a7ede9b6b0e79251f983a359a9543699f22))
+* update dev dependencies ([a326490](https://github.com/zanix/MMM-MealieMenu/commit/a326490c0355b6f1638e8e8196c99aabfd16f243))
+* update MagicMirror and Node.js version requirements ([ef560e2](https://github.com/zanix/MMM-MealieMenu/commit/ef560e2a0b18aeb633a2902af4a13c75c60dbc5a))
+
+### Refactoring
+
+* add config validation ([d423552](https://github.com/zanix/MMM-MealieMenu/commit/d423552d0de4dbdea8b6bd0073c953506e300496))
+* **ui:** improve template and CSS for grouped meals ([a8b83bb](https://github.com/zanix/MMM-MealieMenu/commit/a8b83bbf4fef74245bcef0474644ebd04378bf99))
+
+### Tests
+
+* add tests and helpers ([b1098c4](https://github.com/zanix/MMM-MealieMenu/commit/b1098c495abc145bae8a78371fa7a5fe617bd184))
+
+### Continuous Integration
+
+* **workflows:** update automated-tests and release GitHub Actions ([422132a](https://github.com/zanix/MMM-MealieMenu/commit/422132ab83f52bc542c0b96d74fb26583b5f86ef))
+
 ## [1.7.0](https://github.com/zanix/MMM-MealieMenu/compare/v1.6.1...v1.7.0) (2024-10-23)
 
 ### Added
