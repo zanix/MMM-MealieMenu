@@ -9,3 +9,6 @@ updates:
     directory: /
     schedule:
       interval: monthly
+    groups:
+      dev-dependencies:
+        dependency-type: "development"
