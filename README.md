@@ -79,10 +79,10 @@ npm install --omit=dev
 ```
 
 > [!TIP]
-> You can use a specific version by checking out a tag or commit after cloning. For example, to use `v1.0.0`:
+> You can use a specific version by checking out a tag or commit after cloning. For example, to use `v2.0.0`:
 >
 > ```bash
-> git checkout v1.0.0
+> git switch -d v2.0.0
 > ```
 
 ## Update
